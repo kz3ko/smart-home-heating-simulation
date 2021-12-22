@@ -38,14 +38,13 @@ class Sensor:
     def regulate_temperature(self, room: Room):
         current = room.temperature
         people = room.number_of_people
-        target = room.cooldown_temperature if people == 0 else room.target_temperature
+        target = room.target_temperature if people else room.cooldown_temperature
 
         if target - self.deviation < current < target + self.deviation:
             return
 
         diff = abs(current - target) / 3
-        if diff < self.deviation:
-            diff = self.deviation
+        diff = self.deviation if diff < self.deviation else diff
 
         if current < target:
             room.temperature += diff

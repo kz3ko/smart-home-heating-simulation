@@ -6,14 +6,14 @@ app = Flask(__name__)
 simulation = Simulation()
 
 
-@app.route('/start', methods=['GET'])
+@app.route('/start', methods=['POST'])
 def start_simulation() -> jsonify:
     simulation.start()
 
     return jsonify(message='Simulation started.', status=200)
 
 
-@app.route('/stop', methods=['GET'])
+@app.route('/stop', methods=['POST'])
 def stop_simulation() -> jsonify:
     simulation.stop()
 

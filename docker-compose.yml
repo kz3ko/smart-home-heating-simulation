@@ -9,6 +9,7 @@ services:
     command: python app.py
     volumes:
       - ./backend:/backend
+      - ./house-config.json:/backend/config/house-config.json
     ports:
       - '5000:5000'
 
@@ -20,6 +21,7 @@ services:
     volumes:
       - ./frontend:/frontend
       - /frontend/node_modules
+      - ./house-config.json:/frontend/src/house-config.json
     ports:
       - '3000:3000'
     depends_on:

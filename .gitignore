@@ -24,3 +24,7 @@ venv/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# docker related
+backend/config/house-config.json
+frontend/src/house-config.json

@@ -11,5 +11,5 @@ class Room:
     hotThreshold: [float]
     cooldownTemperature: float
     owner: Optional[str] = None,
-    curentTemperature: Optional[float] = 21
+    currentTemperature: Optional[float] = 21
     numberOfPeople: Optional[int] = 0

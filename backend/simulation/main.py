@@ -13,7 +13,7 @@ class House:
         self.rooms = self.__get_rooms_from_config(self.config)
 
     @staticmethod
-    def __get_rooms_from_config(config: dict) -> dict[str, Room]:
+    def __get_rooms_from_config(config: dict) -> dict[int, Room]:
         rooms = {}
         for room_name, room_config in config.get('rooms', {}).items():
             room_config = config['rooms'][room_name]
@@ -26,12 +26,14 @@ class House:
                     hotThreshold=room_config['hotThreshold'],
                     cooldownTemperature=room_config['cooldownTemperature'],
                     owner=room_config.get('owner', None),
-                    curentTemperature=room_config.get('currentTemperature', 21),
+                    currentTemperature=room_config.get('currentTemperature', 21),
                     numberOfPeople=room_config.get('numberOfPeople', 0)
                 )
-                rooms[room_config['id']] = room
+                _id = int(room_config['id'])
             except KeyError:
                 raise KeyError(f'There is no id, cooldown or threshold temperatures for config of "{room_name}" room!')
+
+            rooms[_id] = room
 
         return rooms
 
@@ -40,8 +42,7 @@ class Sensor:
 
     def __init__(self, rooms: [Room]):
         self.rooms = rooms
-        self.minimal_change = 0.05
-        self.deviation = 3 * self.minimal_change
+        self.deviation = 0.05
         self.divider = 5
 
     def regulate_temperature(self, room: Room):
@@ -50,40 +51,24 @@ class Sensor:
             diff = self.__get_diff_from_optimal_temperature_range(room)
         else:
             diff = self.__get_diff_from_cooldown_temperature(room)
-        if not diff:
+        if abs(diff) <= self.deviation:
             return
-        to_change = self.minimal_change if abs(diff/self.divider) < self.minimal_change else diff/self.divider
 
-        current = room.curentTemperature
-        cooldown = room.cooldownTemperature
-        if room.name == 'livingRoom':
-            print(f'Current: {current}, Cooldown: {cooldown}, Diff: {diff}, To change: {to_change}')
-
-        room.curentTemperature += to_change
+        to_change = diff/self.divider
+        room.currentTemperature += to_change
 
     @staticmethod
     def __get_diff_from_optimal_temperature_range(room: Room) -> float:
-        current = room.curentTemperature
-        min_optimal = min(room.optimalThreshold)
-        max_optimal = max(room.optimalThreshold)
-
-        if min_optimal < current < max_optimal:
-            return 0
-        elif current <= min_optimal:
-            diff = min_optimal - current
+        if room.currentTemperature <= min(room.optimalThreshold):
+            return min(room.optimalThreshold) - room.currentTemperature
+        elif room.currentTemperature >= max(room.optimalThreshold):
+            return max(room.optimalThreshold) - room.currentTemperature
         else:
-            diff = max_optimal - current
-
-    def __get_diff_from_cooldown_temperature(self, room: Room) -> float:
-        current = room.curentTemperature
-        cooldown = room.cooldownTemperature
-        if cooldown - self.deviation < current < cooldown + self.deviation:
             return 0
 
-        diff = abs((cooldown - current)) / self.divider
-        to_change = self.minimal_change if diff < self.minimal_change else diff
-
-        return to_change if current < cooldown else -to_change
+    @staticmethod
+    def __get_diff_from_cooldown_temperature(room: Room) -> float:
+        return room.cooldownTemperature - room.currentTemperature
 
 
 class Simulation:
@@ -108,12 +93,12 @@ class Simulation:
     def get_rooms(self) -> list:
         return [asdict(room) for room in self.house.rooms.values()]
 
-    def get_room(self, name: str) -> dict:
-        return asdict(self.house.rooms[name])
+    def get_room(self, room_id: int) -> dict:
+        return asdict(self.house.rooms[room_id])
 
-    def update_room(self, name: str, data: dict):
-        room = self.house.rooms[name]
-        room.numberOfPeople = data.get('numberOfPeople') or room.numberOfPeople
+    def update_room(self, room_id: int, data: dict):
+        room = self.house.rooms[room_id]
+        room.numberOfPeople = data.get('numberOfPeople', room.numberOfPeople)
 
     def __run(self):
         while self.is_running:

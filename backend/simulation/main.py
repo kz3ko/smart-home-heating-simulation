@@ -104,7 +104,5 @@ class Simulation:
         while self.is_running:
             for room in self.house.rooms.values():
                 self.sensor.regulate_temperature(room)
-                if room.name == 'livingRoom':
-                    print(room)
 
             sleep(1)

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import {getBackgroundColor} from "../../helpers/getBackgroundColor";
+import RFIDSensor from "../Molecules/RFIDSensor/RFIDSensor";
 
 const Room = styled.div`
   width: 225px;
@@ -24,6 +25,8 @@ const StyledLabel = styled.p`
 `;
 
 const SouthRoom = props => {
+    const [peoples, setPeoples] = useState(0);
+
     return (
         <Room
             onClick={() => props.dialogVisible('southroom')}
@@ -32,8 +35,9 @@ const SouthRoom = props => {
             <StyledLabel>
                 Pokój Południe
             </StyledLabel>
+            <RFIDSensor onTouchPlus={() => setPeoples(peoples + 1)} onTouchMinus={() => setPeoples(peoples - 1)} />
             <StyledLabel>{`Temperatura: ${props.temperature}℃`}</StyledLabel>
-        </Room>
+            <StyledLabel>{`Ilość osób: ${peoples}`}</StyledLabel>        </Room>
     );
 };
 

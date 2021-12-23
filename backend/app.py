@@ -34,9 +34,9 @@ def get_room_data(name: str) -> jsonify:
 
 
 @app.route('/update-room/<name>', methods=['POST'])
-def set_room_data(name: str) -> jsonify:
+def update_room(name: str) -> jsonify:
     room_data = request.get_json()
-    simulation.set_room_data(name, room_data)
+    simulation.update_room(name, room_data)
 
     return jsonify(message=f'Updated "{name}" room.', status=200)
 

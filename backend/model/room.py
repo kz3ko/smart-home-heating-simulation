@@ -5,8 +5,11 @@ from typing import Optional
 @dataclass
 class Room:
     name: str
-    target_temperature: float
-    cooldown_temperature: float
-    owner: Optional[str] = None
-    temperature: Optional[float] = 21
-    number_of_people: Optional[int] = 0
+    coldThreshold: [float]
+    optimalThreshold: [float]
+    warmThreshold: [float]
+    hotThreshold: [float]
+    cooldownTemperature: float
+    owner: Optional[str] = None,
+    curentTemperature: Optional[float] = 21
+    numberOfPeople: Optional[int] = 0

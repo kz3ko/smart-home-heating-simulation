@@ -36,8 +36,9 @@ const SouthRoom = props => {
                 Pokój Południe
             </StyledLabel>
             <RFIDSensor onTouchPlus={() => setPeoples(peoples + 1)} onTouchMinus={() => setPeoples(peoples - 1)} />
-            <StyledLabel>{`Temperatura: ${props.temperature}℃`}</StyledLabel>
-            <StyledLabel>{`Ilość osób: ${peoples}`}</StyledLabel>        </Room>
+            <StyledLabel>{`Temperatura: ${props.temperature.toFixed(2)}℃`}</StyledLabel>
+            <StyledLabel>{`Ilość osób: ${props.numberOfPeople}`}</StyledLabel>
+        </Room>
     );
 };
 

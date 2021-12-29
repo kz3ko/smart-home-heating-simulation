@@ -9,7 +9,10 @@ services:
     command: python app.py
     volumes:
       - ./backend:/backend
-      - ./house-config.json:/backend/config/house-config.json
+      - type: bind
+        source: ./house-config.json
+        target: /backend/config/house-config.json
+        read_only: true
     ports:
       - '8000:8000'
 
@@ -21,7 +24,10 @@ services:
     volumes:
       - ./frontend:/frontend
       - /frontend/node_modules
-      - ./house-config.json:/frontend/src/house-config.json
+      - type: bind
+        source: ./house-config.json
+        target: /frontend/src/house-config.json
+        read_only: true
     ports:
       - '3000:3000'
     depends_on:

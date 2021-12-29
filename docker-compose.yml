@@ -11,7 +11,7 @@ services:
       - ./backend:/backend
       - ./house-config.json:/backend/config/house-config.json
     ports:
-      - '5000:5000'
+      - '8000:8000'
 
   frontend:
     restart: always

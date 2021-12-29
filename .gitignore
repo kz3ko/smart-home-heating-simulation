@@ -27,4 +27,3 @@ yarn-error.log*
 
 # docker related
 backend/config/house-config.json
-frontend/src/house-config.json

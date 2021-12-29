@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from simulation.main import Simulation
 
 app = Flask(__name__)
 simulation = Simulation()
+CORS(app)
 
 
 @app.route('/start', methods=['POST'])

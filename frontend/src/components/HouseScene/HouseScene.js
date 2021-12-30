@@ -71,12 +71,6 @@ const HouseScene = () => {
     const [roomsData, setRoomsData] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(null);
     const [temperature, setTemperature] = useState(null);
-    const [bedroomTemp, setBedroomTemp] = useState('26,4');
-    const [officeTemp, setOfficeTemp] = useState('24.4');
-    const [livingRoomTemp, setLivingRoomTemp] = useState('15');
-    const [northRoomTemp, setNorthRoomTemp] = useState('22.3');
-    const [southRoomTemp, setSouthRoomTemp] = useState('21.5');
-    const [bathRoomTemp, setBathRoomTemp] = useState('24.6');
 
     const renderDialog = () => (
         <StyledDialog>
@@ -94,7 +88,7 @@ const HouseScene = () => {
                     />
                 </div>
                 <StyledButtonsWrapper>
-                    <Button disabled={temperature < 15 || temperature > 30} onClick={() => changeTemperature()}>
+                    <Button disabled={temperature < 15 || temperature > 30} onClick={() => setDialogVisible(false)}>
                         Zatwierdź
                     </Button>
                     <div style={{ width: 16 }}/>
@@ -124,48 +118,21 @@ const HouseScene = () => {
         })
     }
 
-    useEffect(() => {
-        fetchRoomsData();
-    }, [])
-
-    function changeTemperature() {
-        if (temperature) {
-            switch(dialogVisible) {
-                case 'bedroom':
-                    setBedroomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'officeroom':
-                    setOfficeTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'livingroom':
-                    setLivingRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'northroom':
-                    setNorthRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'southroom':
-                    setSouthRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'bathroom':
-                    setBathRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-            }
-        } else {
-            setDialogVisible(null);
-        }
+    function setPeopleAmount (roomId, numberOfPeople) {
+        axios.post(`http://localhost:8000/update-room/${roomId}`, {
+            numberOfPeople
+        }).finally(() => fetchRoomsData());
     }
+
+    function fetchCyclical() {
+        setInterval(() => {
+            fetchRoomsData()
+        }, 3000)
+    }
+
+    useEffect(() => {
+        fetchCyclical();
+    }, [])
 
     return (
         <>
@@ -189,14 +156,13 @@ const HouseScene = () => {
                         >
                             STOP
                         </button>
-                        <button onClick={() => fetchRoomsData()}>
-                            REFRESH
-                        </button>
                     </StyledButtonsContainer>
                     <Room1
                         numberOfPeople={roomsData.filter(e => e.name === 'bedRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'bedRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.bedRoom.id}
                         width={houseConfig.rooms.bedRoom.width}
                         height={houseConfig.rooms.bedRoom.height}
                         xPos={houseConfig.rooms.bedRoom.xPos}
@@ -206,6 +172,8 @@ const HouseScene = () => {
                         temperature={roomsData.filter(e => e.name === 'officeRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         numberOfPeople={roomsData.filter(e => e.name === 'officeRoom')[0].numberOfPeople}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.officeRoom.id}
                         width={houseConfig.rooms.officeRoom.width}
                         height={houseConfig.rooms.officeRoom.height}
                         xPos={houseConfig.rooms.officeRoom.xPos}
@@ -215,6 +183,8 @@ const HouseScene = () => {
                         numberOfPeople={roomsData.filter(e => e.name === 'livingRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'livingRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.livingRoom.id}
                         width={houseConfig.rooms.livingRoom.width}
                         height={houseConfig.rooms.livingRoom.height}
                         xPos={houseConfig.rooms.livingRoom.xPos}
@@ -224,6 +194,8 @@ const HouseScene = () => {
                         numberOfPeople={roomsData.filter(e => e.name === 'bathRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'bathRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.bathRoom.id}
                         width={houseConfig.rooms.bathRoom.width}
                         height={houseConfig.rooms.bathRoom.height}
                         xPos={houseConfig.rooms.bathRoom.xPos}
@@ -233,6 +205,8 @@ const HouseScene = () => {
                         numberOfPeople={roomsData.filter(e => e.name === 'northRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'northRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.northRoom.id}
                         width={houseConfig.rooms.northRoom.width}
                         height={houseConfig.rooms.northRoom.height}
                         xPos={houseConfig.rooms.northRoom.xPos}
@@ -242,6 +216,8 @@ const HouseScene = () => {
                         numberOfPeople={roomsData.filter(e => e.name === 'southRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'southRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
+                        setPeopleAmount={setPeopleAmount}
+                        roomId={houseConfig.rooms.southRoom.id}
                         width={houseConfig.rooms.southRoom.width}
                         height={houseConfig.rooms.southRoom.height}
                         xPos={houseConfig.rooms.southRoom.xPos}

@@ -35,7 +35,16 @@ const SouthRoom = props => {
             <StyledLabel>
                 Pokój Południe
             </StyledLabel>
-            <RFIDSensor onTouchPlus={() => setPeoples(peoples + 1)} onTouchMinus={() => setPeoples(peoples - 1)} />
+            <RFIDSensor
+                onTouchPlus={() => props.setPeopleAmount(props.roomId, props.numberOfPeople + 1)}
+                onTouchMinus={() => {
+                    if (props.numberOfPeople - 1 >= 0) {
+                        props.setPeopleAmount(props.roomId, props.numberOfPeople - 1)
+                    } else {
+                        alert('Pokój jest już pusty.')
+                    }
+                }}
+            />
             <StyledLabel>{`Temperatura: ${props.temperature.toFixed(2)}℃`}</StyledLabel>
             <StyledLabel>{`Ilość osób: ${props.numberOfPeople}`}</StyledLabel>
         </Room>

@@ -4,7 +4,6 @@ import {getBackgroundColor} from "../../helpers/getBackgroundColor";
 import RFIDSensor from "../Molecules/RFIDSensor/RFIDSensor";
 
 const BathRoom = props => {
-    const [peoples, setPeoples] = useState(0);
 
     const Room = styled.div`
       width: ${props.width}px;
@@ -27,6 +26,7 @@ const BathRoom = props => {
       font-weight: bold;
       text-align: center;
     `;
+
     return (
         <Room
             onClick={() => props.dialogVisible('bathroom')}
@@ -35,7 +35,17 @@ const BathRoom = props => {
             <StyledLabel>
                 Łazienka
             </StyledLabel>
-            <RFIDSensor onTouchPlus={() => setPeoples(peoples + 1)} onTouchMinus={() => setPeoples(peoples - 1)} />
+
+            <RFIDSensor
+                onTouchPlus={() => props.setPeopleAmount(props.roomId, props.numberOfPeople + 1)}
+                onTouchMinus={() => {
+                    if (props.numberOfPeople - 1 >= 0) {
+                        props.setPeopleAmount(props.roomId, props.numberOfPeople - 1)
+                    } else {
+                        alert('Łazienka jest już pusta.')
+                    }
+                }}
+            />
             <StyledLabel>{`Temperatura: ${props.temperature.toFixed(2)}℃`}</StyledLabel>
             <StyledLabel>{`Ilość osób: ${props.numberOfPeople}`}</StyledLabel>
         </Room>

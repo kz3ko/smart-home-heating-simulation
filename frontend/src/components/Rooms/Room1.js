@@ -4,7 +4,6 @@ import {getBackgroundColor} from "../../helpers/getBackgroundColor";
 import RFIDSensor from "../Molecules/RFIDSensor/RFIDSensor";
 
 const Room1 = props => {
-    const [peoples, setPeoples] = useState(0);
 
     const Room = styled.div`
       width: ${props.width}px;
@@ -34,7 +33,16 @@ const Room1 = props => {
             <StyledLabel>
                 Sypialnia
             </StyledLabel>
-            <RFIDSensor onTouchPlus={() => setPeoples(peoples + 1)} onTouchMinus={() => setPeoples(peoples - 1)} />
+            <RFIDSensor
+                onTouchPlus={() => props.setPeopleAmount(props.roomId, props.numberOfPeople + 1)}
+                onTouchMinus={() => {
+                    if (props.numberOfPeople - 1 >= 0) {
+                        props.setPeopleAmount(props.roomId, props.numberOfPeople - 1)
+                    } else {
+                        alert('Pokój jest już pusty.')
+                    }
+                }}
+            />
             <StyledLabel>{`Temperatura: ${props.temperature.toFixed(2)}℃`}</StyledLabel>
             <StyledLabel>{`Ilość osób: ${props.numberOfPeople}`}</StyledLabel>
         </Room>

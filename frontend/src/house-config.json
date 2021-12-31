@@ -87,7 +87,7 @@
       "id": 6,
       "owner": "Elisabeth",
       "coldThreshold": [15, 19],
-      "optimalThreshold": [20, 23],
+      "optimalThreshold": [19, 23],
       "warmThreshold": [23, 26],
       "hotThreshold": [26, 30],
       "cooldownTemperature": 19,

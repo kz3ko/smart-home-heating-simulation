@@ -1,20 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import houseImage from '../../assets/22428951-plan-mieszkania.jpeg';
-import Room1 from "../Rooms/Room1";
-import OfficeRoom from "../Rooms/OfficeRoom";
-import LivingRoom from "../Rooms/LivingRoom";
-import BathRoom from "../Rooms/BathRoom";
-import NorthRoom from "../Rooms/NorthRoom";
-import SouthRoom from "../Rooms/SouthRoom";
+import RoomComponent from "../Rooms/RoomComponent";
 import TextInput from "../Atoms/TextInput/TextInput";
 import Button from "../Atoms/Button/Button";
 import houseConfig from '../../house-config.json';
+import axios from "axios";
 
 const StyledHouseScene = styled.div`
   display: flex;
   width: ${houseConfig.pageWidth}px;
   height: ${houseConfig.pageHeight}px;
+  flex-direction: column;
 `;
 
 const StyledDialog = styled.div`
@@ -55,143 +52,135 @@ const ErrorText = styled.span`
   text-align: center;
 `;
 
+const StyledButtonsContainer = styled.div`
+  display: flex;
+  align-self: center;
+  flex-direction: row;
+  width: 400px;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+`;
+
 const HouseScene = () => {
+    const [roomsData, setRoomsData] = useState(null);
     const [dialogVisible, setDialogVisible] = useState(null);
     const [temperature, setTemperature] = useState(null);
-    const [bedroomTemp, setBedroomTemp] = useState('26,4');
-    const [officeTemp, setOfficeTemp] = useState('24.4');
-    const [livingRoomTemp, setLivingRoomTemp] = useState('15');
-    const [northRoomTemp, setNorthRoomTemp] = useState('22.3');
-    const [southRoomTemp, setSouthRoomTemp] = useState('21.5');
-    const [bathRoomTemp, setBathRoomTemp] = useState('24.6');
 
-    function changeTemperature() {
-        if (temperature) {
-            switch(dialogVisible) {
-                case 'bedroom':
-                    setBedroomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'officeroom':
-                    setOfficeTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'livingroom':
-                    setLivingRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'northroom':
-                    setNorthRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'southroom':
-                    setSouthRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-                case 'bathroom':
-                    setBathRoomTemp(temperature);
-                    setDialogVisible(null);
-                    setTemperature(null);
-                    break;
-            }
-        } else {
-            setDialogVisible(null);
-        }
+    const renderDialog = () => (
+        <StyledDialog>
+            <span style={{ textAlign: 'center' }}>Zmień temperaturę pomieszczenia</span>
+            <StyledInputWrapper>
+                <div style={{ width: '60%', alignSelf: 'center' }}>
+                    <TextInput
+                        onChange={e => setTemperature(e.target.value)}
+                        value={temperature}
+                        type={'number'}
+                        name={'temperature'}
+                        placeholder={'Ustaw temperaturę pokoju'}
+                        max={30}
+                        min={15}
+                    />
+                </div>
+                <StyledButtonsWrapper>
+                    <Button disabled={temperature < 15 || temperature > 30} onClick={() => setDialogVisible(false)}>
+                        Zatwierdź
+                    </Button>
+                    <div style={{ width: 16 }}/>
+                    <Button onClick={() => setDialogVisible(null)}>
+                        Anuluj
+                    </Button>
+                </StyledButtonsWrapper>
+                {temperature > 30 || temperature < 15 && (
+                    <ErrorText>
+                        wybierz temperaturę z zakresu od 15 do 30
+                    </ErrorText>
+                )}
+            </StyledInputWrapper>
+        </StyledDialog>
+    );
+
+    function startSimulation() {
+        axios.post('http://localhost:8000/start').then(() => alert('Symulacja rozpoczęta'));
+    }
+    function stopSimulation() {
+        axios.post('http://localhost:8000/stop').then(() => alert('Symulacja zakończona'));
+    }
+    function fetchRoomsData() {
+        axios.get('http://localhost:8000/rooms').then(res => {
+            console.log(res.data.roomsData)
+            setRoomsData(res.data.roomsData);
+        })
     }
 
+    function setPeopleAmount (roomId, numberOfPeople) {
+        axios.post(`http://localhost:8000/update-room/${roomId}`, {
+            numberOfPeople
+        }).finally(() => fetchRoomsData());
+    }
+
+    function fetchCyclical() {
+        setInterval(() => {
+            fetchRoomsData()
+        }, 3000)
+    }
+
+    useEffect(() => {
+        fetchCyclical();
+    }, [])
+
     return (
-        <StyledHouseScene style={{
-            backgroundImage: `url(${houseImage}`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat'
-        }}>
-            <Room1
-                temperature={bedroomTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.bedRoom.width}
-                height={houseConfig.rooms.bedRoom.height}
-                xPos={houseConfig.rooms.bedRoom.xPos}
-                yPos={houseConfig.rooms.bedRoom.yPos}
-            />
-            <OfficeRoom
-                temperature={officeTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.officeRoom.width}
-                height={houseConfig.rooms.officeRoom.height}
-                xPos={houseConfig.rooms.officeRoom.xPos}
-                yPos={houseConfig.rooms.officeRoom.yPos}
-            />
-            <LivingRoom
-                temperature={livingRoomTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.livingRoom.width}
-                height={houseConfig.rooms.livingRoom.height}
-                xPos={houseConfig.rooms.livingRoom.xPos}
-                yPos={houseConfig.rooms.livingRoom.yPos}
-            />
-            <BathRoom
-                temperature={bathRoomTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.bathRoom.width}
-                height={houseConfig.rooms.bathRoom.height}
-                xPos={houseConfig.rooms.bathRoom.xPos}
-                yPos={houseConfig.rooms.bathRoom.yPos}
-            />
-            <NorthRoom
-                temperature={northRoomTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.northRoom.width}
-                height={houseConfig.rooms.northRoom.height}
-                xPos={houseConfig.rooms.northRoom.xPos}
-                yPos={houseConfig.rooms.northRoom.yPos}
-            />
-            <SouthRoom
-                temperature={southRoomTemp}
-                dialogVisible={setDialogVisible}
-                width={houseConfig.rooms.southRoom.width}
-                height={houseConfig.rooms.southRoom.height}
-                xPos={houseConfig.rooms.southRoom.xPos}
-                yPos={houseConfig.rooms.southRoom.yPos}
-            />
-            {dialogVisible && (
-                <StyledDialog>
-                    <span style={{ textAlign: 'center' }}>Zmień temperaturę pomieszczenia</span>
-                    <StyledInputWrapper>
-                        <div style={{ width: '60%', alignSelf: 'center' }}>
-                            <TextInput
-                                onChange={e => setTemperature(e.target.value)}
-                                value={temperature}
-                                type={'number'}
-                                name={'temperature'}
-                                placeholder={'Ustaw temperaturę pokoju'}
-                                max={30}
-                                min={15}
+        <>
+            {roomsData ? (
+                <StyledHouseScene style={{
+                    backgroundImage: `url(${houseImage}`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat'
+                }}>
+                    <StyledButtonsContainer>
+                        <button
+                            onClick={() => startSimulation()}
+                            style={{ backgroundColor: '#80d43c' }}
+                        >
+                            START
+                        </button>
+                        <button
+                            onClick={() => stopSimulation()}
+                            style={{ backgroundColor: '#ef3333' }}
+                        >
+                            STOP
+                        </button>
+                    </StyledButtonsContainer>
+                    {houseConfig.roomsToGenerate.map((item) => {
+                        return (
+                            <RoomComponent
+                                numberOfPeople={roomsData.filter(e => e.name === item.name)[0].numberOfPeople}
+                                temperature={roomsData.filter(e => e.name === item.name)[0].currentTemperature}
+                                coldThreshold={roomsData.filter(e => e.name === item.name)[0].coldThreshold}
+                                optimalThreshold={roomsData.filter(e => e.name === item.name)[0].optimalThreshold}
+                                warmThreshold={roomsData.filter(e => e.name === item.name)[0].warmThreshold}
+                                hotThreshold={roomsData.filter(e => e.name === item.name)[0].hotThreshold}
+                                coolDownTemp={roomsData.filter(e => e.name === item.name)[0].cooldownTemperature}
+                                title={item.title}
+                                dialogVisible={setDialogVisible}
+                                setPeopleAmount={setPeopleAmount}
+                                roomId={item.id}
+                                width={item.width}
+                                height={item.height}
+                                xPos={item.xPos}
+                                yPos={item.yPos}
                             />
-                        </div>
-                        <StyledButtonsWrapper>
-                            <Button disabled={temperature < 15 || temperature > 30} onClick={() => changeTemperature()}>
-                                Zatwierdź
-                            </Button>
-                            <div style={{ width: 16 }}/>
-                            <Button onClick={() => setDialogVisible(null)}>
-                                Anuluj
-                            </Button>
-                        </StyledButtonsWrapper>
-                        {temperature > 30 || temperature < 15 && (
-                            <ErrorText>
-                                wybierz temperaturę z zakresu od 15 do 30
-                            </ErrorText>
-                        )}
-                    </StyledInputWrapper>
-                </StyledDialog>
+                        )
+                    })}
+                    {dialogVisible && (
+                        renderDialog()
+                    )}
+                </StyledHouseScene>
+            ) : (
+                <span>Loading...</span>
             )}
-        </StyledHouseScene>
+        </>
     );
 };
 

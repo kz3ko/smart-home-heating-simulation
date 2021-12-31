@@ -1,13 +1,23 @@
-import houseConfig from '../house-config.json';
-export function getBackgroundColor(temperature) {
+export function getBackgroundColor(
+    temperature,
+    optimalThreshold,
+    coldThreshold,
+    warmThreshold,
+    hotThreshold,
+    coldDownTemp,
+    numberOfPeoples
+) {
     const temp = Number.parseFloat(temperature)
-    if (temp >= houseConfig.coldThreshold[0] && temp < houseConfig.coldThreshold[1]) {
-        return 'rgba(0, 100, 255, 0.2)';
-    } else if (temp >= houseConfig.optimalThreshold[0] && temp < houseConfig.optimalThreshold[1]) {
+    if (Math.round(temp) === coldDownTemp && numberOfPeoples === 0) {
         return 'rgba(0, 255, 0, 0.3)';
-    } else if (temp >= houseConfig.warmThreshold[0] && temp < houseConfig.warmThreshold[1]) {
+    }
+    if (temp >= coldThreshold[0] && temp < coldThreshold[1]) {
+        return 'rgba(0, 100, 255, 0.2)';
+    } else if (temp >= optimalThreshold[0] && temp < optimalThreshold[1]) {
+        return 'rgba(0, 255, 0, 0.3)';
+    } else if (temp >= warmThreshold[0] && temp < warmThreshold[1]) {
         return 'rgba(255, 255, 0, 0.3)';
-    } else if (temp >= houseConfig.hotThreshold[0]) {
+    } else if (temp >= hotThreshold[0]) {
         return 'rgba(255, 0, 0, 0.3)';
     }
 };

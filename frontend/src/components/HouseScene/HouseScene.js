@@ -160,6 +160,10 @@ const HouseScene = () => {
                     <Room1
                         numberOfPeople={roomsData.filter(e => e.name === 'bedRoom')[0].numberOfPeople}
                         temperature={roomsData.filter(e => e.name === 'bedRoom')[0].currentTemperature}
+                        coldThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].hotThreshold}
                         dialogVisible={setDialogVisible}
                         setPeopleAmount={setPeopleAmount}
                         roomId={houseConfig.rooms.bedRoom.id}
@@ -172,6 +176,10 @@ const HouseScene = () => {
                         temperature={roomsData.filter(e => e.name === 'officeRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         numberOfPeople={roomsData.filter(e => e.name === 'officeRoom')[0].numberOfPeople}
+                        coldThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].hotThreshold}
                         setPeopleAmount={setPeopleAmount}
                         roomId={houseConfig.rooms.officeRoom.id}
                         width={houseConfig.rooms.officeRoom.width}
@@ -181,6 +189,10 @@ const HouseScene = () => {
                     />
                     <LivingRoom
                         numberOfPeople={roomsData.filter(e => e.name === 'livingRoom')[0].numberOfPeople}
+                        coldThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].hotThreshold}
                         temperature={roomsData.filter(e => e.name === 'livingRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         setPeopleAmount={setPeopleAmount}
@@ -192,6 +204,10 @@ const HouseScene = () => {
                     />
                     <BathRoom
                         numberOfPeople={roomsData.filter(e => e.name === 'bathRoom')[0].numberOfPeople}
+                        coldThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].hotThreshold}
                         temperature={roomsData.filter(e => e.name === 'bathRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         setPeopleAmount={setPeopleAmount}
@@ -203,6 +219,10 @@ const HouseScene = () => {
                     />
                     <NorthRoom
                         numberOfPeople={roomsData.filter(e => e.name === 'northRoom')[0].numberOfPeople}
+                        coldThreshold={roomsData.filter(e => e.name === 'northRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'northRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'northRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'northRoom')[0].hotThreshold}
                         temperature={roomsData.filter(e => e.name === 'northRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         setPeopleAmount={setPeopleAmount}
@@ -214,6 +234,10 @@ const HouseScene = () => {
                     />
                     <SouthRoom
                         numberOfPeople={roomsData.filter(e => e.name === 'southRoom')[0].numberOfPeople}
+                        coldThreshold={roomsData.filter(e => e.name === 'southRoom')[0].coldThreshold}
+                        optimalThreshold={roomsData.filter(e => e.name === 'southRoom')[0].optimalThreshold}
+                        warmThreshold={roomsData.filter(e => e.name === 'southRoom')[0].warmThreshold}
+                        hotThreshold={roomsData.filter(e => e.name === 'southRoom')[0].hotThreshold}
                         temperature={roomsData.filter(e => e.name === 'southRoom')[0].currentTemperature}
                         dialogVisible={setDialogVisible}
                         setPeopleAmount={setPeopleAmount}

@@ -28,7 +28,7 @@ const LivingRoom = props => {
     return (
         <Room
             onClick={() => props.dialogVisible('livingroom')}
-            style={{ backgroundColor: getBackgroundColor(props.temperature) }}
+            style={{ backgroundColor: getBackgroundColor(props.temperature, props.optimalThreshold, props.coldThreshold, props.warmThreshold, props.hotThreshold) }}
         >
             <StyledLabel>
                 Salon

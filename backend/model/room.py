@@ -5,6 +5,7 @@ from typing import Optional
 @dataclass
 class Room:
     name: str
+    title: str
     coldThreshold: [float]
     optimalThreshold: [float]
     warmThreshold: [float]

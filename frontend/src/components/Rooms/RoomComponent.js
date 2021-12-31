@@ -27,7 +27,7 @@ const RoomComponent = props => {
 
     return (
         <Room
-            onClick={() => props.dialogVisible('bedroom')}
+            onClick={() => props.dialogVisible(props.name)}
             style={{
                 backgroundColor: getBackgroundColor(props.temperature, props.optimalThreshold, props.coldThreshold, props.warmThreshold, props.hotThreshold, props.coolDownTemp, props.numberOfPeople)
             }}

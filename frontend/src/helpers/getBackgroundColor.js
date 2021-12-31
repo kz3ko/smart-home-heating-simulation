@@ -7,8 +7,8 @@ export function getBackgroundColor(
     coldDownTemp,
     numberOfPeoples
 ) {
-    const temp = Number.parseFloat(temperature)
-    if (Math.round(temp) === coldDownTemp && numberOfPeoples === 0) {
+    const temp = temperature.toFixed(2);
+    if (Math.floor(temp) === coldDownTemp && numberOfPeoples === 0) {
         return 'rgba(0, 255, 0, 0.3)';
     }
     if (temp >= coldThreshold[0] && temp < coldThreshold[1]) {

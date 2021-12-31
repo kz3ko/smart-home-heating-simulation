@@ -42,7 +42,6 @@ class Sensor:
 
     def __init__(self, rooms: [Room]):
         self.rooms = rooms
-        self.deviation = 0.05
         self.divider = 5
 
     def regulate_temperature(self, room: Room):
@@ -51,8 +50,6 @@ class Sensor:
             diff = self.__get_diff_from_optimal_temperature_range(room)
         else:
             diff = self.__get_diff_from_cooldown_temperature(room)
-        if abs(diff) <= self.deviation:
-            return
 
         to_change = diff/self.divider
         room.currentTemperature += to_change

@@ -1,12 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import houseImage from '../../assets/22428951-plan-mieszkania.jpeg';
-import Room1 from "../Rooms/Room1";
-import OfficeRoom from "../Rooms/OfficeRoom";
-import LivingRoom from "../Rooms/LivingRoom";
-import BathRoom from "../Rooms/BathRoom";
-import NorthRoom from "../Rooms/NorthRoom";
-import SouthRoom from "../Rooms/SouthRoom";
+import RoomComponent from "../Rooms/RoomComponent";
 import TextInput from "../Atoms/TextInput/TextInput";
 import Button from "../Atoms/Button/Button";
 import houseConfig from '../../house-config.json';
@@ -157,96 +152,27 @@ const HouseScene = () => {
                             STOP
                         </button>
                     </StyledButtonsContainer>
-                    <Room1
-                        numberOfPeople={roomsData.filter(e => e.name === 'bedRoom')[0].numberOfPeople}
-                        temperature={roomsData.filter(e => e.name === 'bedRoom')[0].currentTemperature}
-                        coldThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'bedRoom')[0].hotThreshold}
-                        dialogVisible={setDialogVisible}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.bedRoom.id}
-                        width={houseConfig.rooms.bedRoom.width}
-                        height={houseConfig.rooms.bedRoom.height}
-                        xPos={houseConfig.rooms.bedRoom.xPos}
-                        yPos={houseConfig.rooms.bedRoom.yPos}
-                    />
-                    <OfficeRoom
-                        temperature={roomsData.filter(e => e.name === 'officeRoom')[0].currentTemperature}
-                        dialogVisible={setDialogVisible}
-                        numberOfPeople={roomsData.filter(e => e.name === 'officeRoom')[0].numberOfPeople}
-                        coldThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'officeRoom')[0].hotThreshold}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.officeRoom.id}
-                        width={houseConfig.rooms.officeRoom.width}
-                        height={houseConfig.rooms.officeRoom.height}
-                        xPos={houseConfig.rooms.officeRoom.xPos}
-                        yPos={houseConfig.rooms.officeRoom.yPos}
-                    />
-                    <LivingRoom
-                        numberOfPeople={roomsData.filter(e => e.name === 'livingRoom')[0].numberOfPeople}
-                        coldThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'livingRoom')[0].hotThreshold}
-                        temperature={roomsData.filter(e => e.name === 'livingRoom')[0].currentTemperature}
-                        dialogVisible={setDialogVisible}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.livingRoom.id}
-                        width={houseConfig.rooms.livingRoom.width}
-                        height={houseConfig.rooms.livingRoom.height}
-                        xPos={houseConfig.rooms.livingRoom.xPos}
-                        yPos={houseConfig.rooms.livingRoom.yPos}
-                    />
-                    <BathRoom
-                        numberOfPeople={roomsData.filter(e => e.name === 'bathRoom')[0].numberOfPeople}
-                        coldThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'bathRoom')[0].hotThreshold}
-                        temperature={roomsData.filter(e => e.name === 'bathRoom')[0].currentTemperature}
-                        dialogVisible={setDialogVisible}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.bathRoom.id}
-                        width={houseConfig.rooms.bathRoom.width}
-                        height={houseConfig.rooms.bathRoom.height}
-                        xPos={houseConfig.rooms.bathRoom.xPos}
-                        yPos={houseConfig.rooms.bathRoom.yPos}
-                    />
-                    <NorthRoom
-                        numberOfPeople={roomsData.filter(e => e.name === 'northRoom')[0].numberOfPeople}
-                        coldThreshold={roomsData.filter(e => e.name === 'northRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'northRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'northRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'northRoom')[0].hotThreshold}
-                        temperature={roomsData.filter(e => e.name === 'northRoom')[0].currentTemperature}
-                        dialogVisible={setDialogVisible}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.northRoom.id}
-                        width={houseConfig.rooms.northRoom.width}
-                        height={houseConfig.rooms.northRoom.height}
-                        xPos={houseConfig.rooms.northRoom.xPos}
-                        yPos={houseConfig.rooms.northRoom.yPos}
-                    />
-                    <SouthRoom
-                        numberOfPeople={roomsData.filter(e => e.name === 'southRoom')[0].numberOfPeople}
-                        coldThreshold={roomsData.filter(e => e.name === 'southRoom')[0].coldThreshold}
-                        optimalThreshold={roomsData.filter(e => e.name === 'southRoom')[0].optimalThreshold}
-                        warmThreshold={roomsData.filter(e => e.name === 'southRoom')[0].warmThreshold}
-                        hotThreshold={roomsData.filter(e => e.name === 'southRoom')[0].hotThreshold}
-                        temperature={roomsData.filter(e => e.name === 'southRoom')[0].currentTemperature}
-                        dialogVisible={setDialogVisible}
-                        setPeopleAmount={setPeopleAmount}
-                        roomId={houseConfig.rooms.southRoom.id}
-                        width={houseConfig.rooms.southRoom.width}
-                        height={houseConfig.rooms.southRoom.height}
-                        xPos={houseConfig.rooms.southRoom.xPos}
-                        yPos={houseConfig.rooms.southRoom.yPos}
-                    />
+                    {houseConfig.roomsToGenerate.map((item) => {
+                        return (
+                            <RoomComponent
+                                numberOfPeople={roomsData.filter(e => e.name === item.name)[0].numberOfPeople}
+                                temperature={roomsData.filter(e => e.name === item.name)[0].currentTemperature}
+                                coldThreshold={roomsData.filter(e => e.name === item.name)[0].coldThreshold}
+                                optimalThreshold={roomsData.filter(e => e.name === item.name)[0].optimalThreshold}
+                                warmThreshold={roomsData.filter(e => e.name === item.name)[0].warmThreshold}
+                                hotThreshold={roomsData.filter(e => e.name === item.name)[0].hotThreshold}
+                                coolDownTemp={roomsData.filter(e => e.name === item.name)[0].cooldownTemperature}
+                                title={item.title}
+                                dialogVisible={setDialogVisible}
+                                setPeopleAmount={setPeopleAmount}
+                                roomId={item.id}
+                                width={item.width}
+                                height={item.height}
+                                xPos={item.xPos}
+                                yPos={item.yPos}
+                            />
+                        )
+                    })}
                     {dialogVisible && (
                         renderDialog()
                     )}

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import {getBackgroundColor} from "../../helpers/getBackgroundColor";
 import RFIDSensor from "../Molecules/RFIDSensor/RFIDSensor";
 
-const OfficeRoom = props => {
+const RoomComponent = props => {
 
     const Room = styled.div`
       width: ${props.width}px;
@@ -23,16 +23,17 @@ const OfficeRoom = props => {
     const StyledLabel = styled.p`
       font-size: 18px;
       font-weight: bold;
-      text-align: center;
     `;
 
     return (
         <Room
-            onClick={() => props.dialogVisible('officeroom')}
-            style={{ backgroundColor: getBackgroundColor(props.temperature, props.optimalThreshold, props.coldThreshold, props.warmThreshold, props.hotThreshold) }}
+            onClick={() => props.dialogVisible('bedroom')}
+            style={{
+                backgroundColor: getBackgroundColor(props.temperature, props.optimalThreshold, props.coldThreshold, props.warmThreshold, props.hotThreshold, props.coolDownTemp, props.numberOfPeople)
+            }}
         >
             <StyledLabel>
-                Biuro
+                {props.title}
             </StyledLabel>
             <RFIDSensor
                 onTouchPlus={() => props.setPeopleAmount(props.roomId, props.numberOfPeople + 1)}
@@ -50,4 +51,4 @@ const OfficeRoom = props => {
     );
 };
 
-export default OfficeRoom;
+export default RoomComponent;

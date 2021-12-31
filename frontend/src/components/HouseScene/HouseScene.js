@@ -122,7 +122,7 @@ const HouseScene = () => {
     function fetchCyclical() {
         setInterval(() => {
             fetchRoomsData()
-        }, 3000)
+        }, 1000)
     }
 
     useEffect(() => {
@@ -152,7 +152,7 @@ const HouseScene = () => {
                             STOP
                         </button>
                     </StyledButtonsContainer>
-                    {houseConfig.roomsToGenerate.map((item) => {
+                    {houseConfig.rooms.map((item) => {
                         return (
                             <RoomComponent
                                 numberOfPeople={roomsData.filter(e => e.name === item.name)[0].numberOfPeople}

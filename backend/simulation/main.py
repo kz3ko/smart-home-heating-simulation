@@ -15,11 +15,11 @@ class House:
     @staticmethod
     def __get_rooms_from_config(config: dict) -> dict[int, Room]:
         rooms = {}
-        for room_name, room_config in config.get('rooms', {}).items():
-            room_config = config['rooms'][room_name]
+        for room_config in config.get('rooms', []):
             try:
                 room = Room(
-                    name=room_name,
+                    name=room_config['name'],
+                    title=room_config['title'],
                     coldThreshold=room_config['coldThreshold'],
                     optimalThreshold=room_config['optimalThreshold'],
                     warmThreshold=room_config['warmThreshold'],
@@ -29,11 +29,11 @@ class House:
                     currentTemperature=room_config.get('currentTemperature', 21),
                     numberOfPeople=room_config.get('numberOfPeople', 0)
                 )
-                _id = int(room_config['id'])
+                id_ = int(room_config['id'])
             except KeyError:
-                raise KeyError(f'There is no id, cooldown or threshold temperatures for config of "{room_name}" room!')
+                raise KeyError(f'There is no mandatory parameter for one of the rooms in config!')
 
-            rooms[_id] = room
+            rooms[id_] = room
 
         return rooms
 

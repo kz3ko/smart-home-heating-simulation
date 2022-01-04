@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -11,6 +11,11 @@ class Room:
     warmThreshold: [float]
     hotThreshold: [float]
     cooldownTemperature: float
-    owner: Optional[str] = None,
+    width: int
+    height: int
+    xPos: int
+    yPos: int
+    neighbourRooms: Optional[dict[int, int]] = field(default_factory=dict)
+    owner: Optional[str] = None
     currentTemperature: Optional[float] = 21
     numberOfPeople: Optional[int] = 0

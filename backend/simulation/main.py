@@ -1,5 +1,5 @@
 from threading import Thread
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from time import sleep
 
 from model.room import Room
@@ -10,32 +10,31 @@ class House:
 
     def __init__(self):
         self.config = HOUSE_CONFIG
-        self.rooms = self.__get_rooms_from_config(self.config)
+        self.rooms = self.__get_rooms_from_config()
+        self.__set_neighbour_rooms()
 
-    @staticmethod
-    def __get_rooms_from_config(config: dict) -> dict[int, Room]:
+    def __get_rooms_from_config(self) -> dict[int, Room]:
         rooms = {}
-        for room_config in config.get('rooms', []):
+        room_field_names = [field.name for field in fields(Room)]
+        for room_config in self.config.get('rooms', []):
+            valid_room_config = {field: room_config[field] for field in room_config if field in room_field_names}
             try:
-                room = Room(
-                    name=room_config['name'],
-                    title=room_config['title'],
-                    coldThreshold=room_config['coldThreshold'],
-                    optimalThreshold=room_config['optimalThreshold'],
-                    warmThreshold=room_config['warmThreshold'],
-                    hotThreshold=room_config['hotThreshold'],
-                    cooldownTemperature=room_config['cooldownTemperature'],
-                    owner=room_config.get('owner', None),
-                    currentTemperature=room_config.get('currentTemperature', 21),
-                    numberOfPeople=room_config.get('numberOfPeople', 0)
-                )
-                id_ = int(room_config['id'])
+                id_ = room_config.pop('id')
+                room = Room(**valid_room_config)
             except KeyError:
-                raise KeyError(f'There is no mandatory parameter for one of the rooms in config!')
+                raise KeyError(f'There is no id or mandatory parameter for one of the rooms in config!')
 
             rooms[id_] = room
 
         return rooms
+
+    def __set_neighbour_rooms(self):
+        for room_id, room in self.rooms.items():
+            for neighbour_room_id, neighbour_room in self.rooms.items():
+                if room_id == neighbour_room_id:
+                    continue
+            if room_id == 1:
+                print(room)
 
 
 class Sensor:
@@ -96,6 +95,7 @@ class Simulation:
     def update_room(self, room_id: int, data: dict):
         room = self.house.rooms[room_id]
         room.numberOfPeople = data.get('numberOfPeople', room.numberOfPeople)
+        room.currentTemperature = data.get('currentTemperature', room.currentTemperature)
 
     def __run(self):
         while self.is_running:

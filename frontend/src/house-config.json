@@ -78,7 +78,7 @@
     },
     {
       "name": "southRoom",
-      "title": "Pokój półudnie",
+      "title": "Pokój południe",
       "id": 6,
       "owner": "Elisabeth",
       "coldThreshold": [15, 19],

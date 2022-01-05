@@ -31,16 +31,18 @@ def get_rooms_data() -> jsonify:
 def get_room_data(room_id: int) -> jsonify:
     try:
         return jsonify(roomData=simulation.get_room(room_id), status=200)
-    except KeyError:
+    except ValueError:
         return jsonify(roomData=[], status=404)
 
 
 @app.route('/update-room/<int:room_id>', methods=['POST'])
 def update_room(room_id: int) -> jsonify:
     room_data = request.get_json()
-    simulation.update_room(room_id, room_data)
-
-    return jsonify(message=f'Updated room with "{room_id}" id.', status=200)
+    try:
+        simulation.update_room(room_id, room_data)
+        return jsonify(message=f'Updated room with "{room_id}" id.', status=200)
+    except ValueError:
+        return jsonify(message=f'There is no room with "{room_id} id!', status=404)
 
 
 if __name__ == '__main__':

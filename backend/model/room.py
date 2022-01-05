@@ -41,3 +41,19 @@ class Room:
             'neighbourRoomName': neighbour_room.name,
             'commonWallLength': common_wall_length
         })
+
+    def check_if_room_is_a_vertical_neighbour(self, room: Room, wall_thickness: int):
+        if abs(self.xPos - room.xPos) <= wall_thickness or abs(
+                self.xPos + self.width - room.xPos - room.width) <= wall_thickness:
+            if abs(self.yPos - room.height - room.yPos) <= wall_thickness:
+                self.set_neighbour_room('north', room)
+            elif abs(self.yPos + self.height - room.yPos) <= wall_thickness:
+                self.set_neighbour_room('south', room)
+
+    def check_if_room_is_a_horizontal_neighbour(self, room: Room, wall_thickness: int):
+        if abs(self.yPos - room.yPos) <= wall_thickness or abs(
+                self.yPos + self.height - room.yPos - room.height) <= wall_thickness:
+            if abs(self.xPos + self.width - room.xPos) <= wall_thickness:
+                self.set_neighbour_room('east', room)
+            elif abs(self.xPos - room.width - room.xPos) <= wall_thickness:
+                self.set_neighbour_room('west', room)

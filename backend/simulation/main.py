@@ -30,6 +30,8 @@ class House:
             rooms.append(room)
 
         self.__set_neighbour_rooms(rooms)
+        for room in rooms:
+            print(f'\nRoom name: {room.name}\n Room neighbours:{room.neighbourRooms}\n')
 
         return rooms
 
@@ -38,24 +40,8 @@ class House:
             for neighbour_room in rooms:
                 if room == neighbour_room:
                     continue
-                self.__check_if_it_is_a_vertical_neighbour(room, neighbour_room)
-                self.__check_if_it_is_a_horizontal_neighbour(room, neighbour_room)
-
-    def __check_if_it_is_a_vertical_neighbour(self, room: Room, neighbour_room: Room):
-        if abs(room.xPos - neighbour_room.xPos) <= self.wall_thickness or abs(
-                room.xPos + room.width - neighbour_room.xPos - neighbour_room.width) <= self.wall_thickness:
-            if abs(room.yPos - neighbour_room.height - neighbour_room.yPos) <= self.wall_thickness:
-                room.set_neighbour_room('north', neighbour_room)
-            elif abs(room.yPos + room.height - neighbour_room.yPos) <= self.wall_thickness:
-                room.set_neighbour_room('south', neighbour_room)
-
-    def __check_if_it_is_a_horizontal_neighbour(self, room: Room, neighbour_room: Room):
-        if abs(room.yPos - neighbour_room.yPos) <= self.wall_thickness or abs(
-                room.yPos + room.height - neighbour_room.yPos - neighbour_room.height) <= self.wall_thickness:
-            if abs(room.xPos + room.width - neighbour_room.xPos) <= self.wall_thickness:
-                room.set_neighbour_room('east', neighbour_room)
-            elif abs(room.xPos - neighbour_room.width - neighbour_room.xPos) <= self.wall_thickness:
-                room.set_neighbour_room('west', neighbour_room)
+                room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.wall_thickness)
+                room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.wall_thickness)
 
 
 class Sensor:

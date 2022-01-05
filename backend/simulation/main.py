@@ -30,8 +30,6 @@ class House:
             rooms.append(room)
 
         self.__set_neighbour_rooms(rooms)
-        for room in rooms:
-            print(f'\nRoom name: {room.name}\n Room neighbours:{room.neighbourRooms}\n')
 
         return rooms
 

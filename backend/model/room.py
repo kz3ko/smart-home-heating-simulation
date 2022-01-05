@@ -38,7 +38,6 @@ class Room:
 
         self.neighbourRooms[site].append({
             'neighbourRoomId': neighbour_room.id,
-            'neighbourRoomName': neighbour_room.name,
             'commonWallLength': common_wall_length
         })
 

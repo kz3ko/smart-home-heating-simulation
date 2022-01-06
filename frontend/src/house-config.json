@@ -2,6 +2,7 @@
   "houseProjectUrl": "https://thumbs.dreamstime.com/b/layout-two-bedroom-apartment-construction-project-architectural-drawing-layout-two-bedroom-apartment-construction-210332588.jpg",
   "pageWidth": 1500,
   "pageHeight": 800,
+  "wallThickness": 20,
   "rooms": [
     {
       "name": "officeRoom",

@@ -1,10 +1,9 @@
 from models.room import Room
 
 
-class Sensor:
+class Thermostat:
 
-    def __init__(self, rooms: [Room]):
-        self.rooms = rooms
+    def __init__(self):
         self.divider = 5
 
     def regulate_temperature(self, room: Room):

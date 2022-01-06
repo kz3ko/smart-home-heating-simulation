@@ -2,14 +2,14 @@ from threading import Thread
 from time import sleep
 
 from models.house import House
-from models.sensor import Sensor
+from models.thermostat import Thermostat
 
 
 class Simulation:
 
     def __init__(self):
         self.house = House()
-        self.sensor = Sensor(self.house.rooms)
+        self.thermostat = Thermostat()
         self.is_running = False
         self._thread = None
 
@@ -38,6 +38,7 @@ class Simulation:
     def __run(self):
         while self.is_running:
             for room in self.house.rooms:
-                self.sensor.regulate_temperature(room)
+                room.change_temperature_due_to_neighbours()
+                self.thermostat.regulate_temperature(room)
 
             sleep(1)

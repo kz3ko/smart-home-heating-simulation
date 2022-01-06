@@ -64,7 +64,7 @@ const StyledButtonsContainer = styled.div`
 
 const HouseScene = () => {
     const [roomsData, setRoomsData] = useState(null);
-    const [dialogVisible, setDialogVisible] = useState(null);
+    const [selectedRoom, setSelectedRoom] = useState(null);
     const [temperature, setTemperature] = useState(null);
 
     const renderDialog = () => (
@@ -83,11 +83,11 @@ const HouseScene = () => {
                     />
                 </div>
                 <StyledButtonsWrapper>
-                    <Button disabled={temperature < 15 || temperature > 30} onClick={() => setDialogVisible(false)}>
+                    <Button disabled={temperature < 15 || temperature > 30} onClick={() => setRoomTemperature()}>
                         Zatwierdź
                     </Button>
                     <div style={{ width: 16 }}/>
-                    <Button onClick={() => setDialogVisible(null)}>
+                    <Button onClick={() => setSelectedRoom(null)}>
                         Anuluj
                     </Button>
                 </StyledButtonsWrapper>
@@ -108,9 +108,17 @@ const HouseScene = () => {
     }
     function fetchRoomsData() {
         axios.get('http://localhost:8000/rooms').then(res => {
-            console.log(res.data.roomsData)
             setRoomsData(res.data.roomsData);
         })
+    }
+
+    function setRoomTemperature () {
+        axios.post(`http://localhost:8000/update-room/${selectedRoom}`, {
+            currentTemperature: temperature
+        }).finally(() => {
+            setSelectedRoom(null);
+            setTemperature(null);
+        });
     }
 
     function setPeopleAmount (roomId, numberOfPeople) {
@@ -163,7 +171,7 @@ const HouseScene = () => {
                                 hotThreshold={roomsData.filter(e => e.name === item.name)[0].hotThreshold}
                                 coolDownTemp={roomsData.filter(e => e.name === item.name)[0].cooldownTemperature}
                                 title={item.title}
-                                dialogVisible={setDialogVisible}
+                                selectRoom={setSelectedRoom}
                                 setPeopleAmount={setPeopleAmount}
                                 roomId={item.id}
                                 width={item.width}
@@ -173,7 +181,7 @@ const HouseScene = () => {
                             />
                         )
                     })}
-                    {dialogVisible && (
+                    {selectedRoom && (
                         renderDialog()
                     )}
                 </StyledHouseScene>

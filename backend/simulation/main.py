@@ -2,14 +2,16 @@ from threading import Thread
 from time import sleep
 
 from models.house import House
+from models.backyard import Backyard
 from models.thermostat import Thermostat
 
 
 class Simulation:
 
     def __init__(self):
-        self.house = House()
-        self.thermostat = Thermostat()
+        self.backyard = Backyard()
+        self.house = House(self.backyard)
+        self.thermostat = Thermostat(self.house, self.backyard)
         self.is_running = False
         self._thread = None
 

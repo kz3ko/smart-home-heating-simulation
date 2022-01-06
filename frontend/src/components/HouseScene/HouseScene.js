@@ -114,7 +114,7 @@ const HouseScene = () => {
 
     function setRoomTemperature () {
         axios.post(`http://localhost:8000/update-room/${selectedRoom}`, {
-            currentTemperature: temperature
+            currentTemperature: parseFloat(temperature)
         }).finally(() => {
             setSelectedRoom(null);
             setTemperature(null);

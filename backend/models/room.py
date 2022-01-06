@@ -6,8 +6,8 @@ from typing import Optional
 
 @dataclass
 class Room:
-    name: str
     id: int
+    name: str
     title: str
     coldThreshold: list[float]
     optimalThreshold: list[float]
@@ -18,15 +18,38 @@ class Room:
     height: int
     xPos: int
     yPos: int
+    currentTemperature: Optional[float] = 21
+    owner: Optional[str] = None
+    numberOfPeople: Optional[int] = 0
     neighbourRooms: Optional[dict[str, list[dict[str, int]]]] = field(default_factory=lambda: {
         'south': [],
         'north': [],
         'west': [],
         'east': []
     })
-    owner: Optional[str] = None
-    currentTemperature: Optional[float] = 21
-    numberOfPeople: Optional[int] = 0
+
+    def as_dict(self):
+        neighbour_rooms = self.neighbourRooms.copy()
+        for neighbours_per_site in neighbour_rooms.values():
+            if not neighbours_per_site:
+                continue
+            for neighbour in neighbours_per_site:
+                neighbour.pop('room', None)
+
+        return {
+            'id': self.id,
+            'name': self.name,
+            'title': self.title,
+            'coldThreshold': self.coldThreshold,
+            'optimalThreshold': self.optimalThreshold,
+            'warmThreshold': self.warmThreshold,
+            'hotThreshold': self.hotThreshold,
+            'cooldownTemperature': self.cooldownTemperature,
+            'currentTemperature': self.currentTemperature,
+            'owner': self.owner,
+            'numberOfPeople': self.numberOfPeople,
+            'neighbourRooms': neighbour_rooms
+        }
 
     def set_neighbour_room(self, site: str, neighbour_room: Room):
         if site in ['east', 'west']:
@@ -37,7 +60,8 @@ class Room:
             raise KeyError(f'Neighbour room site should be one of: {self.neighbourRooms.keys()}')
 
         self.neighbourRooms[site].append({
-            'neighbourRoomId': neighbour_room.id,
+            'room': neighbour_room,
+            'roomId': neighbour_room.id,
             'commonWallLength': common_wall_length
         })
 

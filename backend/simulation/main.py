@@ -1,5 +1,4 @@
 from threading import Thread
-from dataclasses import asdict
 from time import sleep
 
 from models.house import House
@@ -26,10 +25,10 @@ class Simulation:
             self._thread = None
 
     def get_rooms(self) -> list:
-        return [asdict(room) for room in self.house.rooms]
+        return [room.as_dict() for room in self.house.rooms]
 
     def get_room(self, room_id: int) -> dict:
-        return asdict(self.house.get_room_by_id(room_id))
+        return self.house.get_room_by_id(room_id).as_dict()
 
     def update_room(self, room_id: int, data: dict):
         room = self.house.get_room_by_id(room_id)

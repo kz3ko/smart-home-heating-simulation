@@ -4,6 +4,7 @@ from time import sleep
 from models.house import House
 from models.thermostat import Thermostat
 from models.residents import Residents
+from models.clock import Clock
 
 
 class Simulation:
@@ -12,6 +13,7 @@ class Simulation:
         self.house = House()
         self.residents = Residents()
         self.thermostat = Thermostat()
+        self.clock = Clock()
         self.is_running = False
         self._thread = None
 
@@ -42,5 +44,7 @@ class Simulation:
             for room in self.house:
                 room.change_temperature_due_to_neighbours()
                 self.thermostat.regulate_temperature(room)
+
+            self.clock.move()
 
             sleep(1)

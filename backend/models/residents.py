@@ -9,7 +9,6 @@ class Residents:
     def __init__(self):
         self.config = RESIDENTS_CONFIG
         self.people = self.__get_people_from_config()
-        print(self.people)
 
     def __iter__(self):
         for person in self.people:

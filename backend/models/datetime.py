@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class Clock:
+class Datetime:
 
     def __init__(self):
         self.day, self.month, self.year, self.hour, self.minute = self.__get_current_datetime_splitted()
@@ -19,7 +19,7 @@ class Clock:
         self.__move_year()
 
     def __move_minute(self):
-        self.minute += 1
+        self.minute += self.interval
         if self.minute >= 60:
             self.minute = 0
             self.factor_to_change = 'hour'

@@ -64,8 +64,16 @@ const StyledButtonsContainer = styled.div`
   margin-top: 20px;
 `;
 
+const StyledTimeLabel = styled.p`
+  font-size: 35px;
+  margin-left: 850px;
+  margin-top: 100px;
+  font-weight: bold;
+`;
+
 const HouseScene = () => {
     const [roomsData, setRoomsData] = useState(null);
+    const [dateTime, setDateTime] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [temperature, setTemperature] = useState(null);
 
@@ -111,7 +119,11 @@ const HouseScene = () => {
     function fetchRoomsData() {
         axios.get('http://localhost:8000/rooms').then(res => {
             setRoomsData(res.data.roomsData);
-            console.log(roomsData)
+        })
+    }
+    function fetchDateTime() {
+        axios.get('http://localhost:8000/datetime').then(res => {
+            setDateTime(res.data.dateTime)
         })
     }
 
@@ -134,6 +146,9 @@ const HouseScene = () => {
         setInterval(() => {
             fetchRoomsData()
         }, 1000)
+        setInterval(() => {
+            fetchDateTime()
+        }, 250)
     }
 
     useEffect(() => {
@@ -163,6 +178,7 @@ const HouseScene = () => {
                             STOP
                         </button>
                     </StyledButtonsContainer>
+                    <StyledTimeLabel>{`${dateTime}`}</StyledTimeLabel>
                     {houseConfig.rooms.map((item) => {
                         return (
                             <RoomComponent

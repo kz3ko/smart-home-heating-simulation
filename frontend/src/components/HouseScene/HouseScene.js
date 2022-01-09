@@ -4,8 +4,10 @@ import houseImage from '../../assets/22428951-plan-mieszkania.jpeg';
 import RoomComponent from "../Rooms/RoomComponent";
 import TextInput from "../Atoms/TextInput/TextInput";
 import Button from "../Atoms/Button/Button";
-import houseConfig from '../../house-config.json';
+import config from '../../config.json';
 import axios from "axios";
+
+const houseConfig = config.house
 
 const StyledHouseScene = styled.div`
   display: flex;

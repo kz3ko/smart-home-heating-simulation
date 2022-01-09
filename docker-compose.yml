@@ -10,8 +10,8 @@ services:
     volumes:
       - ./backend:/backend
       - type: bind
-        source: ./frontend/src/house-config.json
-        target: /backend/config/house-config.json
+        source: ./frontend/src/config.json
+        target: /backend/config/config.json
         read_only: true
     ports:
       - '8000:8000'

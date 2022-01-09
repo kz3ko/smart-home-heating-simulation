@@ -1,0 +1,129 @@
+{
+  "house": {
+    "houseProjectUrl": "https://thumbs.dreamstime.com/b/layout-two-bedroom-apartment-construction-project-architectural-drawing-layout-two-bedroom-apartment-construction-210332588.jpg",
+    "pageWidth": 1500,
+    "pageHeight": 800,
+    "wallThickness": 20,
+    "rooms": [
+      {
+        "name": "officeRoom",
+        "title": "Biuro",
+        "id": 1,
+        "owners": ["John"],
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 21],
+        "warmThreshold": [21, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 18,
+        "width": 115,
+        "height": 212,
+        "xPos": 635,
+        "yPos": 92
+      },
+      {
+        "name": "bedRoom",
+        "title": "Sypialnia",
+        "id": 2,
+        "owners": ["John", "Elisabeth"],
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 22],
+        "warmThreshold": [22, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 18,
+        "width": 232,
+        "height": 211,
+        "xPos": 397,
+        "yPos": 92
+      },
+      {
+        "name": "bathRoom",
+        "title": "Łazienka",
+        "id": 3,
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 22],
+        "warmThreshold": [22, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 18,
+        "width": 190,
+        "height": 120,
+        "xPos": 764,
+        "yPos": 544
+      },
+      {
+        "name": "livingRoom",
+        "title": "Salon",
+        "id": 4,
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 22],
+        "warmThreshold": [22, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 18,
+        "width": 360,
+        "height": 360,
+        "xPos": 397,
+        "yPos": 303
+      },
+      {
+        "name": "northRoom",
+        "title": "Pokój Północ",
+        "id": 5,
+        "owners": ["Kate"],
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 22.5],
+        "warmThreshold": [22.5, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 18,
+        "width": 276,
+        "height": 166,
+        "xPos": 910,
+        "yPos": 290
+      },
+      {
+        "name": "southRoom",
+        "title": "Pokój południe",
+        "id": 6,
+        "owners": ["Steve"],
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 23],
+        "warmThreshold": [23, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 19,
+        "width": 225,
+        "height": 200,
+        "xPos": 960,
+        "yPos": 463
+      }
+    ]
+  },
+  "residents": [
+    {
+      "name": "John",
+      "id": 1,
+      "activities": {
+        "work": ["8-16"],
+        "gym": ["19-21"]
+      }
+    },
+    {
+      "name": "Elisabeth",
+      "id": 2,
+      "activities": {
+        "work": ["7-15"]
+      }
+    },
+    {
+      "name": "Steve",
+      "id": 3,
+      "activities": {
+        "school": ["8-16"]
+      }
+    },
+    {
+      "name": "Kate",
+      "id": 4,
+      "activities": {
+        "college": ["8-11", "14-16", "18-21"]
+      }
+    }
+  ]
+}

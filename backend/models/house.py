@@ -2,7 +2,6 @@ from dataclasses import fields
 
 from config.config import HOUSE_CONFIG
 from models.room import Room
-from models.thermostat import Thermostat
 
 
 class House:
@@ -16,6 +15,10 @@ class House:
         self.neighbour_room_impact_factor = self.wall_thickness/self.max_wall_thickness
         self.rooms = self.__get_rooms_from_config()
 
+    def __iter__(self):
+        for room in self.rooms:
+            yield room
+
     def get_room_by_id(self, room_id) -> Room:
         [room] = [room for room in self.rooms if room.id == room_id]
         return room
@@ -23,7 +26,7 @@ class House:
     def __get_rooms_from_config(self) -> list[Room]:
         rooms = []
         room_field_names = [field.name for field in fields(Room)]
-        for room_config in self.config.get('rooms', []):
+        for room_config in self.config['rooms']:
             valid_room_config = {field: room_config[field] for field in room_config if field in room_field_names}
             try:
                 room = Room(neighbourRoomImpactFactor=self.neighbour_room_impact_factor, **valid_room_config)

@@ -3,13 +3,17 @@ from time import sleep
 
 from models.house import House
 from models.thermostat import Thermostat
+from models.residents import Residents
+from models.datetime import Datetime
 
 
 class Simulation:
 
     def __init__(self):
+        self.datetime = Datetime()
         self.house = House()
-        self.thermostat = Thermostat()
+        self.residents = Residents(self.house, self.datetime)
+        self.thermostat = Thermostat(self.house, self.datetime)
         self.is_running = False
         self._thread = None
 
@@ -25,7 +29,7 @@ class Simulation:
             self._thread = None
 
     def get_rooms(self) -> list:
-        return [room.as_dict() for room in self.house.rooms]
+        return [room.as_dict() for room in self.house]
 
     def get_room(self, room_id: int) -> dict:
         return self.house.get_room_by_id(room_id).as_dict()
@@ -37,8 +41,11 @@ class Simulation:
 
     def __run(self):
         while self.is_running:
-            for room in self.house.rooms:
+            for room in self.house:
                 room.change_temperature_due_to_neighbours()
                 self.thermostat.regulate_temperature(room)
+            for person in self.residents:
+                person.move()
+            self.datetime.move()
 
             sleep(1)

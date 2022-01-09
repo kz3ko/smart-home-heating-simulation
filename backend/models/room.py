@@ -21,8 +21,9 @@ class Room:
     yPos: int
     neighbourRoomImpactFactor: float
     currentTemperature: Optional[float] = 21
-    owner: Optional[str] = None
+    owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
+    people: Optional[list[int]] = field(default_factory=list)
     neighbourRooms: Optional[dict[str, list[dict[str, int | Room]]]] = field(default_factory=lambda: {
         'south': [],
         'north': [],
@@ -33,6 +34,7 @@ class Room:
     def __post_init__(self):
         self.total_wall_length = 2 * (self.width + self.height)
         self.minimal_diff_to_impact = 10 * self.neighbourRoomImpactFactor
+
 
     def as_dict(self):
         neighbour_rooms = deepcopy(self.neighbourRooms)
@@ -52,10 +54,19 @@ class Room:
             'hotThreshold': self.hotThreshold,
             'cooldownTemperature': self.cooldownTemperature,
             'currentTemperature': self.currentTemperature,
-            'owner': self.owner,
+            'owner': self.owners,
             'numberOfPeople': self.numberOfPeople,
+            'people': self.people,
             'neighbourRooms': neighbour_rooms
         }
+
+    def add_person(self, person_id: int):
+        self.numberOfPeople += 1
+        self.people.append(person_id)
+
+    def remove_person(self, person_id: int):
+        self.numberOfPeople -= 1
+        self.people.remove(person_id)
 
     def set_neighbour_room(self, site: str, neighbour_room: Room):
         if site in ['east', 'west']:
@@ -99,4 +110,3 @@ class Room:
                 common_wall_factor = neighbour_data['commonWallLength']/self.total_wall_length
                 to_change = -diff * common_wall_factor * self.neighbourRoomImpactFactor
                 self.currentTemperature += to_change
-

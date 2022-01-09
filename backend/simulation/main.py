@@ -10,11 +10,10 @@ from models.datetime import Datetime
 class Simulation:
 
     def __init__(self):
-        self.house = House()
-        self.residents = Residents()
-        self.thermostat = Thermostat()
         self.datetime = Datetime()
-        print(self.datetime)
+        self.house = House()
+        self.residents = Residents(self.house, self.datetime)
+        self.thermostat = Thermostat(self.house, self.datetime)
         self.is_running = False
         self._thread = None
 
@@ -45,10 +44,8 @@ class Simulation:
             for room in self.house:
                 room.change_temperature_due_to_neighbours()
                 self.thermostat.regulate_temperature(room)
-
             for person in self.residents:
-                pass
-
+                person.move()
             self.datetime.move()
 
             sleep(1)

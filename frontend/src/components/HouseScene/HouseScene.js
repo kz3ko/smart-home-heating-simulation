@@ -119,6 +119,7 @@ const HouseScene = () => {
     function fetchRoomsData() {
         axios.get('http://localhost:8000/rooms').then(res => {
             setRoomsData(res.data.roomsData);
+            console.log(res.data.roomsData)
         })
     }
     function fetchDateTime() {

@@ -15,6 +15,9 @@ class House:
         self.neighbour_room_impact_factor = self.wall_thickness/self.max_wall_thickness
         self.rooms = self.__get_rooms_from_config()
 
+    def __repr__(self):
+        return f'House with rooms: {", ".join(room.title for room in self)}'
+
     def __iter__(self):
         for room in self.rooms:
             yield room

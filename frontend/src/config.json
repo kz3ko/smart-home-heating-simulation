@@ -9,7 +9,7 @@
         "name": "officeRoom",
         "title": "Biuro",
         "id": 1,
-        "owners": ["John"],
+        "owners": [1],
         "coldThreshold": [15, 19],
         "optimalThreshold": [19, 21],
         "warmThreshold": [21, 26],
@@ -24,7 +24,7 @@
         "name": "bedRoom",
         "title": "Sypialnia",
         "id": 2,
-        "owners": ["John", "Elisabeth"],
+        "owners": [1, 2],
         "coldThreshold": [15, 19],
         "optimalThreshold": [19, 22],
         "warmThreshold": [22, 26],
@@ -67,7 +67,7 @@
         "name": "northRoom",
         "title": "Pokój Północ",
         "id": 5,
-        "owners": ["Kate"],
+        "owners": [3],
         "coldThreshold": [15, 19],
         "optimalThreshold": [19, 22.5],
         "warmThreshold": [22.5, 26],
@@ -82,7 +82,7 @@
         "name": "southRoom",
         "title": "Pokój południe",
         "id": 6,
-        "owners": ["Steve"],
+        "owners": [4],
         "coldThreshold": [15, 19],
         "optimalThreshold": [19, 23],
         "warmThreshold": [23, 26],
@@ -101,28 +101,32 @@
       "id": 1,
       "activities": {
         "work": ["8-16"],
-        "gym": ["19-21"]
+        "gym": ["19:15-21"],
+        "sleep": ["23-7:30"]
       }
     },
     {
       "name": "Elisabeth",
       "id": 2,
       "activities": {
-        "work": ["7-15"]
+        "work": ["7-15"],
+        "sleep": ["23-6"]
       }
     },
     {
       "name": "Steve",
       "id": 3,
       "activities": {
-        "school": ["8-16"]
+        "school": ["8-16"],
+        "sleep": ["2-7:30"]
       }
     },
     {
       "name": "Kate",
       "id": 4,
       "activities": {
-        "college": ["8-11", "14-16", "18-21"]
+        "college": ["8-11", "14-16", "18-21"],
+        "sleep": ["0-7"]
       }
     }
   ]

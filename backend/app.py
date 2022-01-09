@@ -32,7 +32,7 @@ def get_room_data(room_id: int) -> jsonify:
     try:
         return jsonify(roomData=simulation.get_room(room_id), status=200)
     except ValueError:
-        return jsonify(roomData=[], status=404)\
+        return jsonify(roomData=[], status=404)
 
 
 @app.route('/datetime', methods=['GET'])

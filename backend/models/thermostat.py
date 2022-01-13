@@ -1,4 +1,5 @@
 from models.room import Room
+from models.heater import Heater
 from models.house import House
 from models.datetime import Datetime
 
@@ -6,13 +7,12 @@ from models.datetime import Datetime
 class Thermostat:
 
     def __init__(self, house: House, datetime: Datetime):
-        self.divider = 4
         self.house = house
         self.datetime = datetime
-        self.people_presence_history = {room.id: None for room in self.house}
+        self.people_presence_history = {room.id: None for room in self.house.rooms}
         self.min_time_without_people = 5
 
-    def regulate_temperature(self, room: Room):
+    def regulate_temperature(self, room: Room, heater: Heater):
         people = room.numberOfPeople
         last_people_presence = self.people_presence_history[room.id]
         if last_people_presence:
@@ -26,8 +26,10 @@ class Thermostat:
         else:
             diff = self.__get_diff_from_cooldown_temperature(room, time_without_people)
 
-        to_change = diff/self.divider
-        room.currentTemperature += to_change
+        if diff > 0:
+            heater.heat(diff)
+        else:
+            heater.stop_heating()
 
     def __get_diff_from_optimal_temperature_range(self, room: Room, time_without_people: int) -> float:
         optimal_threshold = room.optimalThreshold

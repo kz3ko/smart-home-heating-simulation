@@ -19,7 +19,9 @@ class Room:
     height: int
     xPos: int
     yPos: int
+    wallHeight: int
     neighbourRoomImpactFactor: float
+    heatDemandPerM2: int
     currentTemperature: Optional[float] = 21
     owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
@@ -35,6 +37,9 @@ class Room:
     def __post_init__(self):
         self.total_wall_length = 2 * (self.width + self.height)
         self.minimal_diff_to_impact = 10 * self.neighbourRoomImpactFactor
+        self.area = self.__get_area()
+        self.volume = self.area * self.wallHeight
+        self.heatDemand = self.__get_heat_demand()
 
     def as_dict(self):
         neighbour_rooms = deepcopy(self.neighbourRooms)
@@ -110,3 +115,10 @@ class Room:
                 common_wall_factor = neighbour_data['commonWallLength']/self.total_wall_length
                 to_change = -diff * common_wall_factor * self.neighbourRoomImpactFactor
                 self.currentTemperature += to_change
+
+    def __get_area(self):
+        scale_to_m = 1.5 / 100
+        return scale_to_m * self.width * scale_to_m * self.height
+
+    def __get_heat_demand(self):
+        return self.area * self.heatDemandPerM2

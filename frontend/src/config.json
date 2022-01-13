@@ -4,6 +4,8 @@
     "pageWidth": 1500,
     "pageHeight": 800,
     "wallThickness": 20,
+    "wallHeight": 180,
+    "lambda": 0.8,
     "rooms": [
       {
         "name": "officeRoom",
@@ -18,7 +20,9 @@
         "width": 115,
         "height": 212,
         "xPos": 635,
-        "yPos": 92
+        "yPos": 92,
+        "heaterPower": 640,
+        "heatDemandPerM2": 80
       },
       {
         "name": "bedRoom",
@@ -33,7 +37,9 @@
         "width": 232,
         "height": 211,
         "xPos": 397,
-        "yPos": 92
+        "yPos": 92,
+        "heaterPower": 1060,
+        "heatDemandPerM2": 70
       },
       {
         "name": "bathRoom",
@@ -48,7 +54,9 @@
         "height": 120,
         "xPos": 764,
         "yPos": 544,
-        "probabilityWeigth": 0.5
+        "probabilityWeigth": 0.5,
+        "heaterPower": 710,
+        "heatDemandPerM2": 100
       },
       {
         "name": "livingRoom",
@@ -63,7 +71,9 @@
         "height": 360,
         "xPos": 397,
         "yPos": 303,
-        "probabilityWeigth": 2
+        "probabilityWeigth": 2,
+        "heaterPower": 2940,
+        "heatDemandPerM2": 80
       },
       {
         "name": "northRoom",
@@ -78,7 +88,9 @@
         "width": 276,
         "height": 166,
         "xPos": 910,
-        "yPos": 290
+        "yPos": 290,
+        "heaterPower": 1000,
+        "heatDemandPerM2": 70
       },
       {
         "name": "southRoom",
@@ -93,7 +105,9 @@
         "width": 225,
         "height": 200,
         "xPos": 960,
-        "yPos": 463
+        "yPos": 463,
+        "heaterPower": 940,
+        "heatDemandPerM2": 70
       }
     ]
   },

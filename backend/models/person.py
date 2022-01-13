@@ -23,9 +23,9 @@ class Person:
     def __post_init__(self):
         self.sleep_time = self.__get_sleep_time()
         self.periods_away_home = self.__get_periods_away_home()
-        self.__owned_rooms = [room for room in self.house if self.id in room.owners]
-        self.__foreign_rooms = [room for room in self.house if room.owners and self.id not in room.owners]
-        self.__public_rooms = [room for room in self.house if not room.owners]
+        self.__owned_rooms = [room for room in self.house.rooms if self.id in room.owners]
+        self.__foreign_rooms = [room for room in self.house.rooms if room.owners and self.id not in room.owners]
+        self.__public_rooms = [room for room in self.house.rooms if not room.owners]
         self.__multiplier = 1000
         self.preferred_rooms = self.__get_preferred_rooms()
         self.move()

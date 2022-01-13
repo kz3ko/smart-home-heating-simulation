@@ -3,6 +3,7 @@ from typing import Optional
 from itertools import chain
 from random import shuffle, choice
 from copy import deepcopy
+from math import ceil
 
 from models.datetime import Datetime
 from models.house import House
@@ -15,6 +16,7 @@ class Person:
     name: str
     house: House
     datetime: Datetime
+    movementProbabilities: dict[str, float]
     currentRoom: Optional[Room] = None
     activities: dict[str, list] = field(default_factory=dict)
 
@@ -24,9 +26,6 @@ class Person:
         self.__owned_rooms = [room for room in self.house if self.id in room.owners]
         self.__foreign_rooms = [room for room in self.house if room.owners and self.id not in room.owners]
         self.__public_rooms = [room for room in self.house if not room.owners]
-        self.__owned_rooms_move_probability = 0.5
-        self.__public_rooms_move_probability = 0.4
-        self.__foreign_rooms_move_probability = 0.1
         self.__multiplier = 1000
         self.preferred_rooms = self.__get_preferred_rooms()
         self.move()
@@ -44,8 +43,6 @@ class Person:
         return list(chain(*[[period.split('-') for period in periods] for periods in self.activities.values()]))
 
     def __is_in_the_house(self):
-        if self.name == 'Kate':
-            print(self.periods_away_home)
         for start, end in self.periods_away_home:
             if Datetime.from_string(start) <= self.datetime <= Datetime.from_string(end):
                 return False
@@ -85,17 +82,16 @@ class Person:
 
     def __get_preferred_rooms(self) -> list[Room]:
         preferred_rooms = []
-        self.__extend(preferred_rooms, self.__owned_rooms, self.__multiplier, self.__owned_rooms_move_probability)
-        self.__extend(preferred_rooms, self.__foreign_rooms, self.__multiplier, self.__foreign_rooms_move_probability)
-        self.__extend(preferred_rooms, self.__public_rooms, self.__multiplier, self.__public_rooms_move_probability)
+        self.__extend(preferred_rooms, self.__public_rooms, self.movementProbabilities['public'])
+        self.__extend(preferred_rooms, self.__owned_rooms,  self.movementProbabilities['owned'])
+        self.__extend(preferred_rooms, self.__foreign_rooms,  self.movementProbabilities['foreign'])
         shuffle(preferred_rooms)
 
         return preferred_rooms
 
-    @staticmethod
-    def __extend(output_list: list[Room], rooms: list[Room], multiplier: int,  probability: float):
-        output_list.extend(
-            chain(*[[room for _ in range(int(int(multiplier * probability / len(rooms))))] for room in rooms])
-        )
-
-
+    def __extend(self, output_list: list[Room], rooms: list[Room],  probability: float):
+        weights = [room.probabilityWeigth for room in rooms]
+        weighed_probabilities = {room.id: room.probabilityWeigth / min(weights) for room in rooms}
+        output_list.extend(chain(*[[room for _ in range(ceil(
+                self.__multiplier * probability * weighed_probabilities[room.id] / sum(weighed_probabilities.values())
+        ))] for room in rooms]))

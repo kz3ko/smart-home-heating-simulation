@@ -47,7 +47,8 @@
         "width": 190,
         "height": 120,
         "xPos": 764,
-        "yPos": 544
+        "yPos": 544,
+        "probabilityWeigth": 0.5
       },
       {
         "name": "livingRoom",
@@ -61,7 +62,8 @@
         "width": 360,
         "height": 360,
         "xPos": 397,
-        "yPos": 303
+        "yPos": 303,
+        "probabilityWeigth": 2
       },
       {
         "name": "northRoom",
@@ -103,6 +105,11 @@
         "work": ["8-16"],
         "gym": ["19:15-21"],
         "sleep": ["23-7:30"]
+      },
+      "movementProbabilities": {
+        "owned": 0.25,
+        "public": 0.7,
+        "foreign": 0.05
       }
     },
     {
@@ -111,6 +118,11 @@
       "activities": {
         "work": ["7-15"],
         "sleep": ["23-6"]
+      },
+      "movementProbabilities": {
+        "owned": 0.3,
+        "public": 0.5,
+        "foreign": 0.2
       }
     },
     {
@@ -119,6 +131,11 @@
       "activities": {
         "school": ["8-16"],
         "sleep": ["2-7:30"]
+      },
+      "movementProbabilities": {
+        "owned": 0.7,
+        "public": 0.2,
+        "foreign": 0.1
       }
     },
     {
@@ -127,6 +144,11 @@
       "activities": {
         "college": ["8-11", "14-16", "18-21"],
         "sleep": ["0-7"]
+      },
+      "movementProbabilities": {
+        "owned": 0.4,
+        "public": 0.3,
+        "foreign": 0.1
       }
     }
   ]

@@ -24,6 +24,7 @@ class Room:
     owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
     people: Optional[list[int]] = field(default_factory=list)
+    probabilityWeigth: Optional[float] = 1
     neighbourRooms: Optional[dict[str, list[dict[str, int | Room]]]] = field(default_factory=lambda: {
         'south': [],
         'north': [],
@@ -34,7 +35,6 @@ class Room:
     def __post_init__(self):
         self.total_wall_length = 2 * (self.width + self.height)
         self.minimal_diff_to_impact = 10 * self.neighbourRoomImpactFactor
-
 
     def as_dict(self):
         neighbour_rooms = deepcopy(self.neighbourRooms)

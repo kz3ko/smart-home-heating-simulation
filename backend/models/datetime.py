@@ -7,7 +7,7 @@ from copy import deepcopy
 from datetime import datetime
 
 
-@dataclass(order=True)
+@dataclass(order=True, eq=True)
 class Datetime:
     day: Optional[int] = None
     month: Optional[int] = None

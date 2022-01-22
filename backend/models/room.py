@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from typing import Optional
 from copy import deepcopy
 
+from models.heater import Heater
+
 
 @dataclass
 class Room:
@@ -22,6 +24,7 @@ class Room:
     wallHeight: int
     neighbourRoomImpactFactor: float
     heatDemandPerM2: int
+    heater: Heater
     currentTemperature: Optional[float] = 21
     owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
@@ -38,7 +41,7 @@ class Room:
         self.total_wall_length = 2 * (self.width + self.height)
         self.minimal_diff_to_impact = 10 * self.neighbourRoomImpactFactor
         self.area = self.__get_area()
-        self.volume = self.area * self.wallHeight
+        self.volume = self.__get_volume()
         self.heatDemand = self.__get_heat_demand()
 
     def as_dict(self):
@@ -118,7 +121,11 @@ class Room:
 
     def __get_area(self):
         scale_to_m = 1.5 / 100
-        return scale_to_m * self.width * scale_to_m * self.height
+        return scale_to_m ** 2 * self.width * self.height
+
+    def __get_volume(self):
+        scale_to_m = 1.5 / 100
+        return scale_to_m ** 3 * self.width * self.height * self.wallHeight
 
     def __get_heat_demand(self):
         return self.area * self.heatDemandPerM2

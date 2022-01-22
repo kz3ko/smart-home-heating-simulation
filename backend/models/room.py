@@ -5,6 +5,7 @@ from typing import Optional
 from copy import deepcopy
 
 from models.heater import Heater
+from models.backyard import Backyard
 
 
 @dataclass
@@ -22,7 +23,6 @@ class Room:
     xPos: int
     yPos: int
     wallHeight: int
-    neighbourRoomImpactFactor: float
     heatDemandPerM2: int
     heater: Heater
     currentTemperature: Optional[float] = 21
@@ -30,7 +30,7 @@ class Room:
     numberOfPeople: Optional[int] = 0
     people: Optional[list[int]] = field(default_factory=list)
     probabilityWeigth: Optional[float] = 1
-    neighbourRooms: Optional[dict[str, list[dict[str, int | Room]]]] = field(default_factory=lambda: {
+    neighbours: Optional[dict[str, list[dict[str, int | Room | Backyard]]]] = field(default_factory=lambda: {
         'south': [],
         'north': [],
         'west': [],
@@ -39,18 +39,16 @@ class Room:
 
     def __post_init__(self):
         self.total_wall_length = 2 * (self.width + self.height)
-        self.minimal_diff_to_impact = 10 * self.neighbourRoomImpactFactor
         self.area = self.__get_area()
         self.volume = self.__get_volume()
-        self.heatDemand = self.__get_heat_demand()
 
     def as_dict(self):
-        neighbour_rooms = deepcopy(self.neighbourRooms)
-        for neighbours_per_site in neighbour_rooms.values():
+        neighbours = deepcopy(self.neighbours)
+        for neighbours_per_site in neighbours.values():
             if not neighbours_per_site:
                 continue
             for neighbour_data in neighbours_per_site:
-                neighbour_data.pop('room', None)
+                neighbour_data.pop('neighbour', None)
 
         return {
             'id': self.id,
@@ -65,7 +63,7 @@ class Room:
             'owner': self.owners,
             'numberOfPeople': self.numberOfPeople,
             'people': self.people,
-            'neighbourRooms': neighbour_rooms
+            'neighbours': neighbours
         }
 
     def add_person(self, person_id: int):
@@ -76,48 +74,53 @@ class Room:
         self.numberOfPeople -= 1
         self.people.remove(person_id)
 
-    def set_neighbour_room(self, site: str, neighbour_room: Room):
-        if site in ['east', 'west']:
-            common_wall_length = min([self.height, neighbour_room.height])
-        elif site in ['north', 'south']:
-            common_wall_length = min([self.width, neighbour_room.width])
-        else:
-            raise KeyError(f'Neighbour room site should be one of: {self.neighbourRooms.keys()}')
-
-        self.neighbourRooms[site].append({
-            'room': neighbour_room,
-            'roomId': neighbour_room.id,
+    def set_room_neighbour(self, site: str, neighbour: Room | Backyard):
+        common_wall_length = self.__get_common_wall_length(site, neighbour)
+        self.neighbours[site].append({
+            'neighbour': neighbour,
+            'name': neighbour.name,
             'commonWallLength': common_wall_length
         })
+        if isinstance(neighbour, Room):
+            self.neighbours[site][-1]['roomId'] = neighbour.id
+
+    def set_backyard_as_lacking_neighbours(self, backyard: Backyard):
+        for site in self.neighbours:
+            if not self.neighbours[site]:
+                self.set_room_neighbour(site, backyard)
 
     def check_if_room_is_a_vertical_neighbour(self, room: Room, wall_thickness: int):
         if abs(self.xPos - room.xPos) <= wall_thickness or abs(
                 self.xPos + self.width - room.xPos - room.width) <= wall_thickness:
             if abs(self.yPos - room.height - room.yPos) <= wall_thickness:
-                self.set_neighbour_room('north', room)
+                self.set_room_neighbour('north', room)
             elif abs(self.yPos + self.height - room.yPos) <= wall_thickness:
-                self.set_neighbour_room('south', room)
+                self.set_room_neighbour('south', room)
 
     def check_if_room_is_a_horizontal_neighbour(self, room: Room, wall_thickness: int):
         if abs(self.yPos - room.yPos) <= wall_thickness or abs(
                 self.yPos + self.height - room.yPos - room.height) <= wall_thickness:
             if abs(self.xPos + self.width - room.xPos) <= wall_thickness:
-                self.set_neighbour_room('east', room)
+                self.set_room_neighbour('east', room)
             elif abs(self.xPos - room.width - room.xPos) <= wall_thickness:
-                self.set_neighbour_room('west', room)
+                self.set_room_neighbour('west', room)
 
-    def change_temperature_due_to_neighbours(self):
-        for neighbours_per_site in self.neighbourRooms.values():
-            if not neighbours_per_site:
-                continue
-            for neighbour_data in neighbours_per_site:
-                neighbour_room = neighbour_data['room']
-                diff = self.currentTemperature - neighbour_room.currentTemperature
-                if abs(diff) < self.minimal_diff_to_impact:
-                    continue
-                common_wall_factor = neighbour_data['commonWallLength']/self.total_wall_length
-                to_change = -diff * common_wall_factor * self.neighbourRoomImpactFactor
-                self.currentTemperature += to_change
+    def __get_common_wall_length(self, site: str, neighbour: Room | Backyard):
+        if site not in self.neighbours.keys():
+            raise KeyError(f'Neighbour site should be one of: {self.neighbours.keys()}')
+
+        if isinstance(neighbour, Backyard):
+            if site in ['east', 'west']:
+                return self.height
+            elif site in ['north', 'south']:
+                return self.width
+        elif isinstance(neighbour, Room):
+            if site in ['east', 'west']:
+                return min([self.height, neighbour.height])
+            elif site in ['north', 'south']:
+                return min([self.width, neighbour.width])
+        else:
+            raise TypeError('Not allowed type of neighbour provided!')
 
     def __get_area(self):
         scale_to_m = 1.5 / 100
@@ -126,6 +129,3 @@ class Room:
     def __get_volume(self):
         scale_to_m = 1.5 / 100
         return scale_to_m ** 3 * self.width * self.height * self.wallHeight
-
-    def __get_heat_demand(self):
-        return self.area * self.heatDemandPerM2

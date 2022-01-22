@@ -31,7 +31,7 @@ class Thermostat:
         elif diff > 0:
             room.heater.is_heating = True
 
-        heat_balance = self.__get_room_heat_balance(room)
+        heat_balance = self.__get_room_heat_balance(room, diff)
 
         air_mass = Air.density * room.volume
 
@@ -57,14 +57,15 @@ class Thermostat:
                 return 0
         return diff
 
-    def __get_room_heat_balance(self, room: Room) -> float:
-        heat_balance = room.heater.power if room.heater.is_heating else 0
-        for neighbours_per_site in room.neighbourRooms.values():
+    def __get_room_heat_balance(self, room: Room, diff: float) -> float:
+        room.heater.power = self.__get_heater_power(room.heater.max_power, diff)
+        heat_balance = room.heater.power
+        for neighbours_per_site in room.neighbours.values():
             if not neighbours_per_site:
                 continue
             for neighbour_data in neighbours_per_site:
-                neighbour_room = neighbour_data['room']
-                temperature_diff = neighbour_room.currentTemperature - room.currentTemperature
+                neighbour = neighbour_data['neighbour']
+                temperature_diff = neighbour.currentTemperature - room.currentTemperature
                 lambda_d = room.heater.lambda_d
                 scale_to_m = 1.5 / 100
                 wall_area = scale_to_m * neighbour_data['commonWallLength'] * scale_to_m * room.wallHeight
@@ -72,6 +73,19 @@ class Thermostat:
 
         return heat_balance * self.datetime.interval * 60
 
+    def __get_heater_power(self, max_power: int, diff: float) -> float:
+        if diff < 0:
+            power = 0
+        elif 0 <= diff < 1:
+            power = max_power/4
+        elif 1 <= diff < 2:
+            power = max_power/3
+        elif 2 <= diff < 3:
+            power=max_power/2
+        else:
+            power = max_power
+
+        return power
 
     @staticmethod
     def __count_thermal_conductivity(lambda_d: float, wall_area: float, temperature_diff: float, time: int) -> float:

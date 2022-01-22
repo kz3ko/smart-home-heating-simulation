@@ -21,7 +21,7 @@ const RoomComponent = props => {
       }
     `;
     const StyledLabel = styled.p`
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
     `;
 

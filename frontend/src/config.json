@@ -108,6 +108,22 @@
         "yPos": 463,
         "heaterPower": 940,
         "heatDemandPerM2": 70
+      },
+      {
+        "name": "corridor",
+        "title": "Korytarz",
+        "id": 7,
+        "coldThreshold": [15, 19],
+        "optimalThreshold": [19, 21],
+        "warmThreshold": [21, 26],
+        "hotThreshold": [26, 30],
+        "cooldownTemperature": 19,
+        "width": 200,
+        "height": 250,
+        "xPos": 762,
+        "yPos": 288,
+        "heaterPower": 980,
+        "heatDemandPerM2": 70
       }
     ]
   },

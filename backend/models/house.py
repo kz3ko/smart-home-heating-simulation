@@ -4,6 +4,7 @@ from typing import Generator, Any
 from config.config import HOUSE_CONFIG
 from models.room import Room
 from models.heater import Heater
+from models.backyard import Backyard
 
 
 class House:
@@ -11,12 +12,12 @@ class House:
     default_wall_thickness = 20  # Equals to 30cm.
     max_wall_thickness = 60  # Equals to 90cm
 
-    def __init__(self):
+    def __init__(self, backyard: Backyard):
+        self.backyard = backyard
         self.config = HOUSE_CONFIG
         self.wall_thickness = self.__get_wall_thickness_from_config()
         self.wall_height = self.__get_wall_height()
         self.lambda_d = self.__get_lambda_d_factor()
-        self.neighbour_room_impact_factor = self.wall_thickness/self.max_wall_thickness
         self.rooms = self.__get_rooms_from_config()
 
     def __iter__(self) -> Generator[Room, Any, Any]:
@@ -38,7 +39,6 @@ class House:
             try:
                 heater = Heater(room_config['heaterPower'], self.lambda_d)
                 room = Room(
-                    neighbourRoomImpactFactor=self.neighbour_room_impact_factor,
                     wallHeight=self.wall_height,
                     heater=heater,
                     **valid_room_config
@@ -48,7 +48,7 @@ class House:
 
             rooms.append(room)
 
-        self.__set_neighbour_rooms(rooms)
+        self.__set_room_neighbours(rooms)
 
         return rooms
 
@@ -60,13 +60,14 @@ class House:
 
         return wall_thickness
 
-    def __set_neighbour_rooms(self, rooms: list[Room]):
+    def __set_room_neighbours(self, rooms: list[Room]):
         for room in rooms:
             for neighbour_room in rooms:
                 if room == neighbour_room:
                     continue
                 room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.wall_thickness)
                 room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.wall_thickness)
+            # room.set_backyard_as_lacking_neighbours(self.backyard)
 
     def __get_lambda_d_factor(self) -> float:
         return self.config['lambda'] / (self.wall_thickness * 1.5 / 100)

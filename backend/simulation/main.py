@@ -5,13 +5,15 @@ from models.house import House
 from models.thermostat import Thermostat
 from models.residents import Residents
 from models.datetime import Datetime
+from models.backyard import Backyard
 
 
 class Simulation:
 
     def __init__(self):
         self.datetime = Datetime()
-        self.house = House()
+        self.backyard = Backyard()
+        self.house = House(self.backyard)
         self.residents = Residents(self.house, self.datetime)
         self.thermostat = Thermostat(self.house, self.datetime)
         self.is_running = False
@@ -43,7 +45,6 @@ class Simulation:
     def __run(self):
         while self.is_running:
             for room in self.house:
-                # room.change_temperature_due_to_neighbours()
                 self.thermostat.regulate_temperature(room)
             # for person in self.residents:
             #     person.move()

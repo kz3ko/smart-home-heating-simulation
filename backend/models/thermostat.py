@@ -58,7 +58,6 @@ class Thermostat:
         return diff
 
     def __get_room_heat_balance(self, room: Room, diff: float) -> float:
-        room.heater.power = self.__get_heater_power(room.heater.max_power, diff)
         heat_balance = room.heater.power
         for neighbours_per_site in room.neighbours.values():
             if not neighbours_per_site:
@@ -71,21 +70,18 @@ class Thermostat:
                 wall_area = scale_to_m * neighbour_data['commonWallLength'] * scale_to_m * room.wallHeight
                 heat_balance += self.__count_thermal_conductivity(lambda_d, wall_area, temperature_diff, 1)
 
+        room.heater.power = self.__get_heater_power(room.heater.max_power, heat_balance, diff)
+
         return heat_balance * self.datetime.interval * 60
 
-    def __get_heater_power(self, max_power: int, diff: float) -> float:
+    @staticmethod
+    def __get_heater_power(max_power: int, heat_balance: float, diff: float) -> float:
         if diff < 0:
-            power = 0
-        elif 0 <= diff < 1:
-            power = max_power/4
-        elif 1 <= diff < 2:
-            power = max_power/3
-        elif 2 <= diff < 3:
-            power=max_power/2
+            return 0
+        if heat_balance + max_power < 0:
+            return max_power
         else:
-            power = max_power
-
-        return power
+            return abs(heat_balance)
 
     @staticmethod
     def __count_thermal_conductivity(lambda_d: float, wall_area: float, temperature_diff: float, time: int) -> float:

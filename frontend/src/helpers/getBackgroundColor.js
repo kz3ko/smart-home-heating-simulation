@@ -9,8 +9,8 @@ export function getBackgroundColor(
 ) {
     const temp = temperature.toFixed(2);
     if (numberOfPeoples === 0) {
-        const warmHotDiff = warmThreshold[1] - warmThreshold[0]
-        if (temp < coldDownTemp) {
+        const warmHotDiff = (warmThreshold[1] - warmThreshold[0])
+        if (temp < coldDownTemp - 0.3) {
             return 'rgba(0, 100, 255, 0.2)';
         } else if (temp > coldDownTemp && temp <= coldDownTemp + warmHotDiff) {
             return 'rgba(255, 255, 0, 0.3)';

@@ -46,8 +46,8 @@ class Simulation:
         while self.is_running:
             for room in self.house:
                 self.thermostat.regulate_temperature(room)
-            # for person in self.residents:
-            #     person.move()
+            for person in self.residents:
+                person.move()
             self.datetime.move()
 
             sleep(self.simulation_interval)

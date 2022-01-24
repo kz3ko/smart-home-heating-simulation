@@ -65,19 +65,17 @@ class Thermostat:
                 wall_area = scale_to_m * neighbour_data['commonWallLength'] * scale_to_m * room.wallHeight
                 heat_balance += self.__count_thermal_conductivity(lambda_d, wall_area, temperature_diff, 1)
 
-        room.heater.power = self.__get_heater_power(room.air_mass, room.heater.max_power, heat_balance, diff, room.name)
+        room.heater.power = self.__get_heater_power(room, diff)
         heat_balance += room.heater.power
 
         return heat_balance * self.datetime.interval * 60
 
-    def __get_heater_power(self, air_mass: float, max_power: int, heat_balance: float, diff: float, name: str) -> float:
-        if diff <= 0:
+    def __get_heater_power(self, room: Room, diff: float) -> float:
+        if not room.heater.is_heating:
             return 0
-        to_heat = self.__count_heat_diff(Air.specific_heat, air_mass, diff) / (self.datetime.interval * 60)
-        if name == 'livingRoom':
-            print(f'To heat in {name}: {to_heat}')
-        if to_heat >= max_power:
-            return max_power
+        to_heat = self.__count_heat_diff(Air.specific_heat, room.air_mass, diff) / (self.datetime.interval * 60)
+        if to_heat >= room.heater.max_power:
+            return room.heater.max_power
         return to_heat
 
     @staticmethod

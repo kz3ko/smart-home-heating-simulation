@@ -26,16 +26,11 @@ class Thermostat:
         else:
             diff = self.__get_diff_from_cooldown_temperature(room, time_without_people)
 
-        if diff < 0:
-            room.heater.is_heating = False
-        elif diff > 0:
-            room.heater.is_heating = True
+        room.heater.is_heating = (diff > 0)
 
         heat_balance = self.__get_room_heat_balance(room, diff)
 
-        air_mass = Air.density * room.volume
-
-        room.currentTemperature += self.__count_temperature_diff(Air.specific_heat, air_mass, heat_balance)
+        room.currentTemperature += self.__count_temperature_diff(Air.specific_heat, room.air_mass, heat_balance)
 
     def __get_diff_from_optimal_temperature_range(self, room: Room, time_without_people: int) -> float:
         optimal_threshold = room.optimalThreshold
@@ -58,7 +53,7 @@ class Thermostat:
         return diff
 
     def __get_room_heat_balance(self, room: Room, diff: float) -> float:
-        heat_balance = room.heater.power
+        heat_balance = 0
         for neighbours_per_site in room.neighbours.values():
             if not neighbours_per_site:
                 continue
@@ -70,23 +65,29 @@ class Thermostat:
                 wall_area = scale_to_m * neighbour_data['commonWallLength'] * scale_to_m * room.wallHeight
                 heat_balance += self.__count_thermal_conductivity(lambda_d, wall_area, temperature_diff, 1)
 
-        room.heater.power = self.__get_heater_power(room.heater.max_power, heat_balance, diff)
+        room.heater.power = self.__get_heater_power(room.air_mass, room.heater.max_power, heat_balance, diff, room.name)
+        heat_balance += room.heater.power
 
         return heat_balance * self.datetime.interval * 60
 
-    @staticmethod
-    def __get_heater_power(max_power: int, heat_balance: float, diff: float) -> float:
-        if diff < 0:
+    def __get_heater_power(self, air_mass: float, max_power: int, heat_balance: float, diff: float, name: str) -> float:
+        if diff <= 0:
             return 0
-        if heat_balance + max_power < 0:
+        to_heat = self.__count_heat_diff(Air.specific_heat, air_mass, diff) / (self.datetime.interval * 60)
+        if name == 'livingRoom':
+            print(f'To heat in {name}: {to_heat}')
+        if to_heat >= max_power:
             return max_power
-        else:
-            return abs(heat_balance)
+        return to_heat
 
     @staticmethod
     def __count_thermal_conductivity(lambda_d: float, wall_area: float, temperature_diff: float, time: int) -> float:
         return lambda_d * wall_area * temperature_diff * time
 
     @staticmethod
-    def __count_temperature_diff(specific_heat: float, mass: float, heat_diff: float):
+    def __count_temperature_diff(specific_heat: float, mass: float, heat_diff: float) -> float:
         return heat_diff / (specific_heat * mass)
+
+    @staticmethod
+    def __count_heat_diff(specific_heat: float, mass: float, temperature_diff: float):
+        return specific_heat * mass * temperature_diff

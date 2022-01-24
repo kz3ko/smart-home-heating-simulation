@@ -67,7 +67,7 @@ class House:
                     continue
                 room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.wall_thickness)
                 room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.wall_thickness)
-            # room.set_backyard_as_lacking_neighbours(self.backyard)
+            room.set_backyard_as_lacking_neighbours(self.backyard)
 
     def __get_lambda_d_factor(self) -> float:
         return self.config['lambda'] / (self.wall_thickness * 1.5 / 100)

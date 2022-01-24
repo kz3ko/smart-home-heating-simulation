@@ -15,6 +15,5 @@ class Backyard:
         self.currentTemperature = self.get_current_temperature()
 
     def get_current_temperature(self) -> float:
-        # TODO: Implement it as an api call
-        self.previousTemperature = self.currentTemperature
-        return 21
+        # TODO: Implement it as an weather api call
+        return 15

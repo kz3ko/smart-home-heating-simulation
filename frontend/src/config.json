@@ -3,9 +3,12 @@
     "houseProjectUrl": "https://thumbs.dreamstime.com/b/layout-two-bedroom-apartment-construction-project-architectural-drawing-layout-two-bedroom-apartment-construction-210332588.jpg",
     "pageWidth": 1500,
     "pageHeight": 800,
-    "wallThickness": 20,
+    "innerWallThickness": 16,
+    "outerWallThickness": 30,
+    "innerLambda": 1.00,
+    "outerLambda": 0.20,
     "wallHeight": 180,
-    "lambda": 0.8,
+    "toMeterScale": 0.015,
     "rooms": [
       {
         "name": "officeRoom",
@@ -21,7 +24,7 @@
         "height": 212,
         "xPos": 635,
         "yPos": 92,
-        "heaterPower": 4850,
+        "heaterPower": 1540,
         "density": 1275,
         "specificHeat": 1
       },
@@ -39,7 +42,7 @@
         "height": 211,
         "xPos": 397,
         "yPos": 92,
-        "heaterPower": 5900,
+        "heaterPower": 1960,
         "density": 1275,
         "specificHeat": 1
       },
@@ -57,7 +60,7 @@
         "xPos": 764,
         "yPos": 544,
         "probabilityWeigth": 0.5,
-        "heaterPower": 4780,
+        "heaterPower": 1510,
         "density": 1275,
         "specificHeat": 1
       },
@@ -75,7 +78,7 @@
         "xPos": 397,
         "yPos": 303,
         "probabilityWeigth": 2,
-        "heaterPower": 11350,
+        "heaterPower": 4140,
         "density": 1275,
         "specificHeat": 1
       },
@@ -93,7 +96,7 @@
         "height": 166,
         "xPos": 910,
         "yPos": 290,
-        "heaterPower": 7000,
+        "heaterPower": 2400,
         "density": 1275,
         "specificHeat": 1
       },
@@ -111,7 +114,7 @@
         "height": 200,
         "xPos": 960,
         "yPos": 463,
-        "heaterPower": 6400,
+        "heaterPower": 1980,
         "density": 1275,
         "specificHeat": 1
       },
@@ -128,7 +131,7 @@
         "height": 250,
         "xPos": 762,
         "yPos": 288,
-        "heaterPower": 5950,
+        "heaterPower": 1980,
         "density": 1275,
         "specificHeat": 1
       }

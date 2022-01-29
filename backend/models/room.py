@@ -22,10 +22,11 @@ class Room:
     height: int
     xPos: int
     yPos: int
-    wallHeight: int
+    wallHeight: float
     density: float  # [g/m^3]
     specificHeat: float  # [J/(g*k)]
     heater: Heater
+    toMeterScale: float
     currentTemperature: Optional[float] = 21
     owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
@@ -91,7 +92,7 @@ class Room:
             if not self.neighbours[site]:
                 self.set_room_neighbour(site, backyard)
 
-    def check_if_room_is_a_vertical_neighbour(self, room: Room, wall_thickness: int):
+    def check_if_room_is_a_vertical_neighbour(self, room: Room, wall_thickness: float):
         if abs(self.xPos - room.xPos) <= wall_thickness or abs(
                 self.xPos + self.width - room.xPos - room.width) <= wall_thickness:
             if abs(self.yPos - room.height - room.yPos) <= wall_thickness:
@@ -99,7 +100,7 @@ class Room:
             elif abs(self.yPos + self.height - room.yPos) <= wall_thickness:
                 self.set_room_neighbour('south', room)
 
-    def check_if_room_is_a_horizontal_neighbour(self, room: Room, wall_thickness: int):
+    def check_if_room_is_a_horizontal_neighbour(self, room: Room, wall_thickness: float):
         if abs(self.yPos - room.yPos) <= wall_thickness or abs(
                 self.yPos + self.height - room.yPos - room.height) <= wall_thickness:
             if abs(self.xPos + self.width - room.xPos) <= wall_thickness:
@@ -125,9 +126,7 @@ class Room:
             raise TypeError('Not allowed type of neighbour provided!')
 
     def __get_area(self):
-        scale_to_m = 1.5 / 100
-        return scale_to_m ** 2 * self.width * self.height
+        return self.toMeterScale ** 2 * self.width * self.height
 
     def __get_volume(self):
-        scale_to_m = 1.5 / 100
-        return scale_to_m ** 3 * self.width * self.height * self.wallHeight
+        return self.__get_area() * self.wallHeight

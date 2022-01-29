@@ -1,5 +1,6 @@
 from dataclasses import fields
 from typing import Generator
+from enum import Enum
 
 from config.config import HOUSE_CONFIG
 from models.room import Room
@@ -7,17 +8,28 @@ from models.heater import Heater
 from models.backyard import Backyard
 
 
-class House:
+class HouseDefaultValues(Enum):
+    innerWallThickness = 15  # [cm]
+    outerWallThickness = 40  # [cm]
+    innerLambda = 1
+    outerLambda = 0.2
+    wallHeight = 270  # [cm]
+    toMeterScale = 0.015
 
-    default_wall_thickness = 20  # Equals to 30cm.
-    max_wall_thickness = 60  # Equals to 90cm
+
+class House:
 
     def __init__(self, backyard: Backyard):
         self.backyard = backyard
         self.config = HOUSE_CONFIG
-        self.wall_thickness = self.__get_wall_thickness_from_config()
-        self.wall_height = self.__get_wall_height()
-        self.lambda_d = self.__get_lambda_d_factor()
+        self.to_meter_scale = self.__get_to_meter_scale()
+        self.inner_wall_thickness = self.__get_house_meter_value('innerWallThickness')
+        self.outer_wall_thickness = self.__get_house_meter_value('outerWallThickness')
+        self.wall_height = self.__get_house_meter_value('wallHeight')
+        self.inner_lambda = self.__get_lambda_value('innerLambda')
+        self.outer_lambda = self.__get_lambda_value('outerLambda')
+        self.inner_lambda_d_factor = self.inner_lambda / self.inner_wall_thickness
+        self.outer_lambda_d_factor = self.outer_lambda / self.outer_wall_thickness
         self.rooms = self.__get_rooms_from_config()
 
     def __iter__(self) -> Generator[Room, any, any]:
@@ -37,42 +49,36 @@ class House:
         for room_config in self.config['rooms']:
             valid_room_config = {field: room_config[field] for field in room_config if field in room_field_names}
             try:
-                heater = Heater(room_config['heaterPower'], self.lambda_d)
+                heater = Heater(room_config['heaterPower'])
                 room = Room(
                     wallHeight=self.wall_height,
                     heater=heater,
+                    toMeterScale=self.to_meter_scale,
                     **valid_room_config
                 )
             except KeyError:
                 raise KeyError(f'There is no mandatory parameter for one of the rooms in config!')
 
             rooms.append(room)
-            if room.name == 'livingRoom':
-                print(room.density, room.specificHeat)
 
         self.__set_room_neighbours(rooms)
 
         return rooms
-
-    def __get_wall_thickness_from_config(self):
-        wall_thickness = self.config.setdefault('wallThickness', self.default_wall_thickness)
-        if wall_thickness > self.max_wall_thickness:
-            wall_thickness = self.max_wall_thickness
-            self.config['wallThickness'] = wall_thickness
-
-        return wall_thickness
 
     def __set_room_neighbours(self, rooms: list[Room]):
         for room in rooms:
             for neighbour_room in rooms:
                 if room == neighbour_room:
                     continue
-                room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.wall_thickness)
-                room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.wall_thickness)
+                room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.inner_wall_thickness)
+                room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.inner_wall_thickness)
             room.set_backyard_as_lacking_neighbours(self.backyard)
 
-    def __get_lambda_d_factor(self) -> float:
-        return self.config['lambda'] / (self.wall_thickness * 1.5 / 100)
+    def __get_to_meter_scale(self) -> float:
+        return self.config.get('toMeterScale', HouseDefaultValues.toMeterScale.value)
 
-    def __get_wall_height(self) -> int:
-        return self.config['wallHeight']
+    def __get_house_meter_value(self, name: str) -> float:
+        return self.config.get(name, HouseDefaultValues[name]) * self.to_meter_scale
+
+    def __get_lambda_value(self, name) -> float:
+        return self.config.get(name, HouseDefaultValues[name])

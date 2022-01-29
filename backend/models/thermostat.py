@@ -1,5 +1,6 @@
-from models.room import Room
+from models.backyard import Backyard
 from models.house import House
+from models.room import Room
 from models.datetime import Datetime
 
 
@@ -7,6 +8,8 @@ class Thermostat:
 
     def __init__(self, house: House, datetime: Datetime):
         self.house = house
+        self.inner_lambda_d_factor = self.house.inner_lambda_d_factor
+        self.outer_lambda_d_factor = self.house.outer_lambda_d_factor
         self.datetime = datetime
         self.people_presence_history = {room.id: None for room in self.house}
         self.min_time_without_people = 5
@@ -59,9 +62,9 @@ class Thermostat:
             for neighbour_data in neighbours_per_site:
                 neighbour = neighbour_data['neighbour']
                 temperature_diff = neighbour.currentTemperature - room.currentTemperature
-                lambda_d = room.heater.lambda_d
-                scale_to_m = 1.5 / 100
-                wall_area = scale_to_m * neighbour_data['commonWallLength'] * scale_to_m * room.wallHeight
+                lambda_d = self.__get_lambda_d_factor(neighbour)
+                common_wall_length = self.house.to_meter_scale * neighbour_data['commonWallLength']
+                wall_area = common_wall_length * room.wallHeight
                 heat_balance += self.__count_thermal_conductivity(lambda_d, wall_area, temperature_diff, 1)
 
         room.heater.power = self.__get_heater_power(room, diff)
@@ -76,6 +79,13 @@ class Thermostat:
         if to_heat >= room.heater.max_power:
             return room.heater.max_power
         return to_heat
+
+    def __get_lambda_d_factor(self, neighbour: Room | Backyard):
+        match neighbour.name:
+            case 'Backyard':
+                return self.outer_lambda_d_factor
+            case _:
+                return self.inner_lambda_d_factor
 
     @staticmethod
     def __count_thermal_conductivity(lambda_d: float, wall_area: float, temperature_diff: float, time: int) -> float:

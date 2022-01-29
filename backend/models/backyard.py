@@ -16,4 +16,4 @@ class Backyard:
 
     @staticmethod
     def get_current_temperature() -> float:
-        return 21
+        return 10

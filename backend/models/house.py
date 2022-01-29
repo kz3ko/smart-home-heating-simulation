@@ -1,5 +1,5 @@
 from dataclasses import fields
-from typing import Generator, Any
+from typing import Generator
 
 from config.config import HOUSE_CONFIG
 from models.room import Room
@@ -20,7 +20,7 @@ class House:
         self.lambda_d = self.__get_lambda_d_factor()
         self.rooms = self.__get_rooms_from_config()
 
-    def __iter__(self) -> Generator[Room, Any, Any]:
+    def __iter__(self) -> Generator[Room, any, any]:
         for room in self.rooms:
             yield room
 
@@ -47,6 +47,8 @@ class House:
                 raise KeyError(f'There is no mandatory parameter for one of the rooms in config!')
 
             rooms.append(room)
+            if room.name == 'livingRoom':
+                print(room.density, room.specificHeat)
 
         self.__set_room_neighbours(rooms)
 

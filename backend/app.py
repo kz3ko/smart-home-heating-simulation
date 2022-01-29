@@ -40,6 +40,14 @@ def get_datetime() -> jsonify:
     return jsonify(dateTime=str(simulation.datetime), status=200)
 
 
+@app.route('/settings', methods=['POST'])
+def update_settings() -> jsonify:
+    settings = request.get_json()
+    simulation.set_settings(settings)
+
+    return jsonify(message='Settings updated.', status=200)
+
+
 @app.route('/update-room/<int:room_id>', methods=['POST'])
 def update_room(room_id: int) -> jsonify:
     room_data = request.get_json()

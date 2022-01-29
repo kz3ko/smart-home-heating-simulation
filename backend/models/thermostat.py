@@ -1,7 +1,6 @@
 from models.room import Room
 from models.house import House
 from models.datetime import Datetime
-from models.air import Air
 
 
 class Thermostat:
@@ -30,7 +29,7 @@ class Thermostat:
 
         heat_balance = self.__get_room_heat_balance(room, diff)
 
-        room.currentTemperature += self.__count_temperature_diff(Air.specific_heat, room.air_mass, heat_balance)
+        room.currentTemperature += self.__count_temperature_diff(room.specificHeat, room.mass, heat_balance)
 
     def __get_diff_from_optimal_temperature_range(self, room: Room, time_without_people: int) -> float:
         optimal_threshold = room.optimalThreshold
@@ -73,7 +72,7 @@ class Thermostat:
     def __get_heater_power(self, room: Room, diff: float) -> float:
         if not room.heater.is_heating:
             return 0
-        to_heat = self.__count_heat_diff(Air.specific_heat, room.air_mass, diff) / (self.datetime.interval * 60)
+        to_heat = self.__count_heat_diff(room.specificHeat, room.mass, diff) / (self.datetime.interval * 60)
         if to_heat >= room.heater.max_power:
             return room.heater.max_power
         return to_heat

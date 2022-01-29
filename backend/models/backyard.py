@@ -14,6 +14,6 @@ class Backyard:
     def __post_init__(self):
         self.currentTemperature = self.get_current_temperature()
 
-    def get_current_temperature(self) -> float:
-        # TODO: Implement it as an weather api call
-        return 15
+    @staticmethod
+    def get_current_temperature() -> float:
+        return 21

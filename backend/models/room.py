@@ -6,7 +6,6 @@ from copy import deepcopy
 
 from models.heater import Heater
 from models.backyard import Backyard
-from models.air import Air
 
 
 @dataclass
@@ -24,6 +23,8 @@ class Room:
     xPos: int
     yPos: int
     wallHeight: int
+    density: float  # [g/m^3]
+    specificHeat: float  # [J/(g*k)]
     heater: Heater
     currentTemperature: Optional[float] = 21
     owners: Optional[list[str]] = field(default_factory=list)
@@ -41,7 +42,7 @@ class Room:
         self.total_wall_length = 2 * (self.width + self.height)
         self.area = self.__get_area()
         self.volume = self.__get_volume()
-        self.air_mass = Air.density * self.volume
+        self.mass = self.density * self.volume
 
     def as_dict(self):
         neighbours = deepcopy(self.neighbours)

@@ -21,7 +21,9 @@
         "height": 212,
         "xPos": 635,
         "yPos": 92,
-        "heaterPower": 1540
+        "heaterPower": 4850,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "bedRoom",
@@ -37,7 +39,9 @@
         "height": 211,
         "xPos": 397,
         "yPos": 92,
-        "heaterPower": 1960
+        "heaterPower": 5900,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "bathRoom",
@@ -53,7 +57,9 @@
         "xPos": 764,
         "yPos": 544,
         "probabilityWeigth": 0.5,
-        "heaterPower": 1510
+        "heaterPower": 4780,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "livingRoom",
@@ -69,7 +75,9 @@
         "xPos": 397,
         "yPos": 303,
         "probabilityWeigth": 2,
-        "heaterPower": 4140
+        "heaterPower": 11350,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "northRoom",
@@ -85,7 +93,9 @@
         "height": 166,
         "xPos": 910,
         "yPos": 290,
-        "heaterPower": 2400
+        "heaterPower": 7000,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "southRoom",
@@ -101,7 +111,9 @@
         "height": 200,
         "xPos": 960,
         "yPos": 463,
-        "heaterPower": 2149
+        "heaterPower": 6400,
+        "density": 1275,
+        "specificHeat": 1
       },
       {
         "name": "corridor",
@@ -116,7 +128,9 @@
         "height": 250,
         "xPos": 762,
         "yPos": 288,
-        "heaterPower": 1980
+        "heaterPower": 5950,
+        "density": 1275,
+        "specificHeat": 1
       }
     ]
   },

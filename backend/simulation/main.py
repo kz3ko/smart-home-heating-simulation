@@ -17,6 +17,7 @@ class Simulation:
         self.residents = Residents(self.house, self.datetime)
         self.thermostat = Thermostat(self.house, self.datetime)
         self.is_running = False
+        self.people_move = False
         self.simulation_interval = 1
         self._thread = None
 
@@ -30,6 +31,10 @@ class Simulation:
         self.is_running = False
         if self._thread:
             self._thread = None
+
+    def set_settings(self, settings: dict[str, any]):
+        self.people_move = settings.get('peopleMove', self.people_move)
+        self.backyard.currentTemperature = settings.get('backyardTemperature', self.backyard.currentTemperature)
 
     def get_rooms(self) -> list:
         return [room.as_dict() for room in self.house]
@@ -46,8 +51,9 @@ class Simulation:
         while self.is_running:
             for room in self.house:
                 self.thermostat.regulate_temperature(room)
-            for person in self.residents:
-                person.move()
+            if self.people_move:
+                for person in self.residents:
+                    person.move()
             self.datetime.move()
 
             sleep(self.simulation_interval)

@@ -58,7 +58,7 @@ const StyledButtonsContainer = styled.div`
   display: flex;
   align-self: center;
   flex-direction: row;
-  width: 400px;
+  width: 800px;
   justify-content: space-around;
   align-items: center;
   margin-top: 20px;
@@ -76,6 +76,7 @@ const HouseScene = () => {
     const [dateTime, setDateTime] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [temperature, setTemperature] = useState(null);
+    const [outsideTemp, setOutsideTemp] = useState(null);
 
     const renderDialog = () => (
         <StyledDialog>
@@ -143,6 +144,24 @@ const HouseScene = () => {
         }).finally(() => fetchRoomsData());
     }
 
+    function setPeopleMoving() {
+        axios.post(`http://localhost:8000/settings`, {
+            peopleMove: true
+        }).then(() => alert('Ruch ludzi włączony'));
+    }
+
+    function setPeopleNotMoving() {
+        axios.post(`http://localhost:8000/settings`, {
+            peopleMove: false
+        }).then(() => alert('Ruch ludzi wyłączony'));
+    }
+
+    function setBackyardTemp() {
+        axios.post(`http://localhost:8000/settings`, {
+            backyardTemp: outsideTemp
+        }).then(() => alert('Temperatura otoczenia zmieniona')).finally(() => setOutsideTemp(null));
+    }
+
     function fetchCyclical() {
         setInterval(() => {
             fetchRoomsData()
@@ -170,14 +189,42 @@ const HouseScene = () => {
                             onClick={() => startSimulation()}
                             style={{ backgroundColor: '#80d43c' }}
                         >
-                            START
+                            START SIMULATION
                         </button>
                         <button
                             onClick={() => stopSimulation()}
                             style={{ backgroundColor: '#ef3333' }}
                         >
-                            STOP
+                            STOP SIMULATION
                         </button>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <button
+                                onClick={() => setPeopleMoving()}
+                                style={{ backgroundColor: '#dadada' }}
+                            >
+                                PEOPLES ON
+                            </button>
+                            <button
+                                onClick={() => setPeopleNotMoving()}
+                                style={{ backgroundColor: '#dadada' }}
+                            >
+                                PEOPLES OFF
+                            </button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <input
+                                placeholder={'Outside temperature'}
+                                onChange={e => setOutsideTemp(e.target.value)}
+                                value={outsideTemp}
+                            />
+                            <button
+                                onClick={() => setBackyardTemp()}
+                                style={{ backgroundColor: '#dadada' }}
+                                disabled={!outsideTemp}
+                            >
+                                SET OUTSIDE TEMP
+                            </button>
+                        </div>
                     </StyledButtonsContainer>
                     <StyledTimeLabel>{`${dateTime}`}</StyledTimeLabel>
                     {houseConfig.rooms.map((item) => {

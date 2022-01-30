@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Optional
-from copy import deepcopy
 
-from models.heater import Heater
 from models.backyard import Backyard
+from models.heater import Heater
 
 
 @dataclass
@@ -28,10 +28,11 @@ class Room:
     heater: Heater
     toMeterScale: float
     currentTemperature: Optional[float] = 21
+    targetTemperature: Optional[float] = 21
     owners: Optional[list[str]] = field(default_factory=list)
     numberOfPeople: Optional[int] = 0
     people: Optional[list[int]] = field(default_factory=list)
-    probabilityWeigth: Optional[float] = 1
+    probabilityWeight: Optional[float] = 1
     neighbours: Optional[dict[str, list[dict[str, int | Room | Backyard]]]] = field(default_factory=lambda: {
         'south': [],
         'north': [],
@@ -44,6 +45,7 @@ class Room:
         self.area = self.__get_area()
         self.volume = self.__get_volume()
         self.mass = self.density * self.volume
+        self.space_between_rooms = 20  # Has to passed like this because it is in pixels.
 
     def as_dict(self):
         neighbours = deepcopy(self.neighbours)
@@ -92,20 +94,20 @@ class Room:
             if not self.neighbours[site]:
                 self.set_room_neighbour(site, backyard)
 
-    def check_if_room_is_a_vertical_neighbour(self, room: Room, wall_thickness: float):
-        if abs(self.xPos - room.xPos) <= wall_thickness or abs(
-                self.xPos + self.width - room.xPos - room.width) <= wall_thickness:
-            if abs(self.yPos - room.height - room.yPos) <= wall_thickness:
+    def check_if_room_is_a_vertical_neighbour(self, room: Room):
+        if abs(self.xPos - room.xPos) <= self.space_between_rooms or abs(
+                self.xPos + self.width - room.xPos - room.width) <= self.space_between_rooms:
+            if abs(self.yPos - room.height - room.yPos) <= self.space_between_rooms:
                 self.set_room_neighbour('north', room)
-            elif abs(self.yPos + self.height - room.yPos) <= wall_thickness:
+            elif abs(self.yPos + self.height - room.yPos) <= self.space_between_rooms:
                 self.set_room_neighbour('south', room)
 
-    def check_if_room_is_a_horizontal_neighbour(self, room: Room, wall_thickness: float):
-        if abs(self.yPos - room.yPos) <= wall_thickness or abs(
-                self.yPos + self.height - room.yPos - room.height) <= wall_thickness:
-            if abs(self.xPos + self.width - room.xPos) <= wall_thickness:
+    def check_if_room_is_a_horizontal_neighbour(self, room: Room):
+        if abs(self.yPos - room.yPos) <= self.space_between_rooms or abs(
+                self.yPos + self.height - room.yPos - room.height) <= self.space_between_rooms:
+            if abs(self.xPos + self.width - room.xPos) <= self.space_between_rooms:
                 self.set_room_neighbour('east', room)
-            elif abs(self.xPos - room.width - room.xPos) <= wall_thickness:
+            elif abs(self.xPos - room.width - room.xPos) <= self.space_between_rooms:
                 self.set_room_neighbour('west', room)
 
     def __get_common_wall_length(self, site: str, neighbour: Room | Backyard):

@@ -27,3 +27,6 @@ yarn-error.log*
 
 # docker related
 backend/config/config.json
+
+# logs
+logs/

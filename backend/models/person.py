@@ -90,8 +90,8 @@ class Person:
         return preferred_rooms
 
     def __extend(self, output_list: list[Room], rooms: list[Room],  probability: float):
-        weights = [room.probabilityWeigth for room in rooms]
-        weighed_probabilities = {room.id: room.probabilityWeigth / min(weights) for room in rooms}
+        weights = [room.probabilityWeight for room in rooms]
+        weighed_probabilities = {room.id: room.probabilityWeight / min(weights) for room in rooms}
         output_list.extend(chain(*[[room for _ in range(ceil(
                 self.__multiplier * probability * weighed_probabilities[room.id] / sum(weighed_probabilities.values())
         ))] for room in rooms]))

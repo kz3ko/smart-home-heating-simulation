@@ -1,40 +1,40 @@
-from threading import Thread
 from time import sleep
 
+from config.config import CONFIG
+from thread_runner.runner import ThreadRunner
 from models.house import House
 from models.thermostat import Thermostat
 from models.residents import Residents
 from models.datetime import Datetime
 from models.backyard import Backyard
+from utilities.csv_logger import CSVLogger
 
 
-class Simulation:
+class Simulation(ThreadRunner):
 
     def __init__(self):
+        super().__init__()
         self.datetime = Datetime()
         self.backyard = Backyard()
         self.house = House(self.backyard)
         self.residents = Residents(self.house, self.datetime)
         self.thermostat = Thermostat(self.house, self.datetime)
-        self.is_running = False
-        self.people_move = False
+        self.people_move = CONFIG.get('peopleMove', False)
         self.simulation_interval = 1
-        self._thread = None
+        self.logger = CSVLogger(self.simulation_interval, self.house, self.datetime)
 
     def start(self):
-        self.is_running = True
-        if not self._thread:
-            self._thread = Thread(target=self.__run, args=(), daemon=True)
-            self._thread.start()
+        super().start()
+        self.logger.start()
 
     def stop(self):
-        self.is_running = False
-        if self._thread:
-            self._thread = None
+        super().stop()
+        self.logger.stop()
 
     def set_settings(self, settings: dict[str, any]):
         self.people_move = settings.get('peopleMove', self.people_move)
-        self.backyard.currentTemperature = settings.get('backyardTemperature', self.backyard.currentTemperature)
+        self.backyard.currentTemperature = float(settings.get('backyardTemperature', self.backyard.currentTemperature))
+        self.logger.enabled = settings.get('csvLoggerEnabled', self.logger.enabled)
 
     def get_rooms(self) -> list:
         return [room.as_dict() for room in self.house]
@@ -47,7 +47,7 @@ class Simulation:
         room.numberOfPeople = data.get('numberOfPeople', room.numberOfPeople)
         room.currentTemperature = data.get('currentTemperature', room.currentTemperature)
 
-    def __run(self):
+    def _run(self):
         while self.is_running:
             for room in self.house:
                 self.thermostat.regulate_temperature(room)

@@ -67,7 +67,7 @@ const StyledButtonsContainer = styled.div`
 const StyledTimeLabel = styled.p`
   font-size: 35px;
   margin-left: 850px;
-  margin-top: 100px;
+  margin-top: 75px;
   font-weight: bold;
 `;
 
@@ -156,9 +156,21 @@ const HouseScene = () => {
         }).then(() => alert('Ruch ludzi wyłączony'));
     }
 
-    function setBackyardTemp() {
+    function turnOnLoggingToCSV() {
         axios.post(`http://localhost:8000/settings`, {
-            backyardTemp: outsideTemp
+            csvLoggerEnabled: true
+        }).then(() => alert('Logowanie do pliku CSV włączone.'));
+    }
+
+    function turnOffLoggingToCSV() {
+        axios.post(`http://localhost:8000/settings`, {
+            csvLoggerEnabled: false
+        }).then(() => alert('Logowanie do pliku CSV wyłączone.'));
+    }
+
+    function setBackyardTemperature() {
+        axios.post(`http://localhost:8000/settings`, {
+            backyardTemperature: outsideTemp
         }).then(() => alert('Temperatura otoczenia zmieniona')).finally(() => setOutsideTemp(null));
     }
 
@@ -202,13 +214,27 @@ const HouseScene = () => {
                                 onClick={() => setPeopleMoving()}
                                 style={{ backgroundColor: '#dadada' }}
                             >
-                                PEOPLES ON
+                                PEOPLE ON
                             </button>
                             <button
                                 onClick={() => setPeopleNotMoving()}
                                 style={{ backgroundColor: '#dadada' }}
                             >
-                                PEOPLES OFF
+                                PEOPLE OFF
+                            </button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <button
+                                onClick={() => turnOnLoggingToCSV()}
+                                style={{ backgroundColor: '#dadada' }}
+                            >
+                                LOGGING ON
+                            </button>
+                            <button
+                                onClick={() => turnOffLoggingToCSV()}
+                                style={{ backgroundColor: '#dadada' }}
+                            >
+                                LOGGING OFF
                             </button>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -218,11 +244,11 @@ const HouseScene = () => {
                                 value={outsideTemp}
                             />
                             <button
-                                onClick={() => setBackyardTemp()}
+                                onClick={() => setBackyardTemperature()}
                                 style={{ backgroundColor: '#dadada' }}
                                 disabled={!outsideTemp}
                             >
-                                SET OUTSIDE TEMP
+                                SET
                             </button>
                         </div>
                     </StyledButtonsContainer>

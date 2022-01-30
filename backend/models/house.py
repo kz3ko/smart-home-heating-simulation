@@ -70,8 +70,8 @@ class House:
             for neighbour_room in rooms:
                 if room == neighbour_room:
                     continue
-                room.check_if_room_is_a_vertical_neighbour(neighbour_room, self.inner_wall_thickness)
-                room.check_if_room_is_a_horizontal_neighbour(neighbour_room, self.inner_wall_thickness)
+                room.check_if_room_is_a_vertical_neighbour(neighbour_room)
+                room.check_if_room_is_a_horizontal_neighbour(neighbour_room)
             room.set_backyard_as_lacking_neighbours(self.backyard)
 
     def __get_to_meter_scale(self) -> float:

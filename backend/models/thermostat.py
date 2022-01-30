@@ -28,6 +28,7 @@ class Thermostat:
         else:
             diff = self.__get_diff_from_cooldown_temperature(room, time_without_people)
 
+        room.targetTemperature = room.currentTemperature + diff
         room.heater.is_heating = (diff > 0)
 
         heat_balance = self.__get_room_heat_balance(room, diff)

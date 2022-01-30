@@ -9,6 +9,7 @@ services:
     command: python app.py
     volumes:
       - ./backend:/backend
+      - ./logs:/backend/logs
       - type: bind
         source: ./frontend/src/config.json
         target: /backend/config/config.json

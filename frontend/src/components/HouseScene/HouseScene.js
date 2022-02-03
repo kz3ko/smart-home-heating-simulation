@@ -112,25 +112,25 @@ const HouseScene = () => {
     );
 
     function startSimulation() {
-        axios.post('http://localhost:8000/start').then(() => alert('Symulacja rozpoczęta'));
+        axios.post('/start').then(() => alert('Symulacja rozpoczęta'));
     }
     function stopSimulation() {
-        axios.post('http://localhost:8000/stop').then(() => alert('Symulacja zakończona'));
+        axios.post('/stop').then(() => alert('Symulacja zakończona'));
     }
     function fetchRoomsData() {
-        axios.get('http://localhost:8000/rooms').then(res => {
+        axios.get('/rooms').then(res => {
             setRoomsData(res.data.roomsData);
             console.log(res.data.roomsData)
         })
     }
     function fetchDateTime() {
-        axios.get('http://localhost:8000/datetime').then(res => {
+        axios.get('/datetime').then(res => {
             setDateTime(res.data.dateTime)
         })
     }
 
     function setRoomTemperature () {
-        axios.post(`http://localhost:8000/update-room/${selectedRoom}`, {
+        axios.post(`/update-room/${selectedRoom}`, {
             currentTemperature: parseFloat(temperature)
         }).finally(() => {
             setSelectedRoom(null);
@@ -139,37 +139,37 @@ const HouseScene = () => {
     }
 
     function setPeopleAmount (roomId, numberOfPeople) {
-        axios.post(`http://localhost:8000/update-room/${roomId}`, {
+        axios.post(`/update-room/${roomId}`, {
             numberOfPeople
         }).finally(() => fetchRoomsData());
     }
 
     function setPeopleMoving() {
-        axios.post(`http://localhost:8000/settings`, {
+        axios.post(`/settings`, {
             peopleMove: true
         }).then(() => alert('Ruch ludzi włączony'));
     }
 
     function setPeopleNotMoving() {
-        axios.post(`http://localhost:8000/settings`, {
+        axios.post(`/settings`, {
             peopleMove: false
         }).then(() => alert('Ruch ludzi wyłączony'));
     }
 
     function turnOnLoggingToCSV() {
-        axios.post(`http://localhost:8000/settings`, {
+        axios.post(`/settings`, {
             csvLoggerEnabled: true
         }).then(() => alert('Logowanie do pliku CSV włączone.'));
     }
 
     function turnOffLoggingToCSV() {
-        axios.post(`http://localhost:8000/settings`, {
+        axios.post(`/settings`, {
             csvLoggerEnabled: false
         }).then(() => alert('Logowanie do pliku CSV wyłączone.'));
     }
 
     function setBackyardTemperature() {
-        axios.post(`http://localhost:8000/settings`, {
+        axios.post(`/settings`, {
             backyardTemperature: outsideTemp
         }).then(() => alert('Temperatura otoczenia zmieniona')).finally(() => setOutsideTemp(null));
     }

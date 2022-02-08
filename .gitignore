@@ -29,4 +29,5 @@ yarn-error.log*
 backend/config/config.json
 
 # logs
-logs/
+logs/*
+!logs/logs_plot.py

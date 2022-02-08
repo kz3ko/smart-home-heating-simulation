@@ -60,7 +60,7 @@ class CSVLogger(ThreadRunner):
 
     def __get_latest_data(self, room: Room) -> DataFrame:
         return DataFrame({
-            'timestamp': self.datetime,
+            'timestamp': str(self.datetime),
             'currentTemperature': room.currentTemperature,
             'targetTemperature': 20,
             'backyardTemperature': self.house.backyard.currentTemperature,

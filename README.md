@@ -1,12 +1,15 @@
 # Smart home heating simulation
 
-Run backend in docker container using command:
+Smart home heating simulation app, made for "Distributed computations" course on AGH in Cracow. 
+
+Run app in docker, running command below in project root:
 
 ```bash
 docker-compose up -d
 ```
 
-Then run frontend app from `frontend` directory:
+To turn app off run:
+
 ```bash
-npm start
+docker-compose down
 ```

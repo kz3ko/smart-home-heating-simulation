@@ -32,3 +32,6 @@ backend/config/config.json
 logs/*
 !logs/logs_plot.py
 !logs/README.md
+
+# Terraform related
+.terraform

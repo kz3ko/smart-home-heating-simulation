@@ -1,42 +1,48 @@
-resource "aws_iam_role" "app_instance_role" {
-  name = "app-instance-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
 
-resource "aws_iam_instance_profile" "app_instance_profile" {
-  name = "app-instance-profile"
-  role = aws_iam_role.app_instance_role.id
-}
-
-resource "aws_iam_policy_attachment" "app_instance_attachment" {
-  name       = "app-instance-attachment"
-  roles      = [aws_iam_role.app_instance_role.id]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-
-resource "aws_instance" "app_instance" {
-  ami                         = "ami-07bd2fc45c8a8dd48"
-  instance_type               = "t2.micro"
-  iam_instance_profile        = aws_iam_instance_profile.app_instance_profile.id
-  user_data                   = file("${path.module}/scripts/docker_install.sh")
-  monitoring                  = true
-  associate_public_ip_address = false
-
-  credit_specification {
-    cpu_credits = "unlimited"
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
   }
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
+
+resource "aws_launch_configuration" "app_instance" {
+  name_prefix                 = "app-instance"
+  image_id                    = data.aws_ami.amazon_linux_2.id
+  instance_type               = "t2.micro"
+  associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.app_instance_profile.id
+  key_name                    = aws_key_pair.app_instance_private_key_pair.key_name
+  security_groups             = [aws_security_group.app_instance_active_sg.id]
+  user_data                   = file("${path.module}/scripts/app-instance-userdata.sh")
+}
+
+resource "aws_autoscaling_group" "app_instance" {
+  name                 = aws_launch_configuration.app_instance.name
+  launch_configuration = aws_launch_configuration.app_instance.name
+  capacity_rebalance   = true
+  min_size             = 1
+  max_size             = 1
+  desired_capacity     = 1
+  vpc_zone_identifier  = [aws_subnet.main.id]
+
+  tags = [
+    {
+      key                 = "Name"
+      value               = "app-instance"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "SSMAgentAutoUpgradeSSM"
+      value               = "true"
+      propagate_at_launch = true
+    },
+  ]
 }

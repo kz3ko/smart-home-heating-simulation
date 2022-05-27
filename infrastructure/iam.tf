@@ -29,26 +29,9 @@ resource "aws_iam_role_policy" "app_instance_policy" {
   policy = data.aws_iam_policy_document.app_instance_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "app_instance_ssm_policy_3" {
+resource "aws_iam_role_policy_attachment" "app_instance_ssm_policy_attach" {
   role       = aws_iam_role.app_instance_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-
-resource "aws_iam_role_policy_attachment" "app_instance_ssm_policy_4" {
-  role       = aws_iam_role.app_instance_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-
-resource "aws_iam_policy_attachment" "app_instance_ssm_policy_1" {
-  name       = "first-attachment"
-  roles      = [aws_iam_role.app_instance_role.id]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-
-resource "aws_iam_policy_attachment" "app_instance_ssm_policy_2" {
-  name       = "second-attachment"
-  roles      = [aws_iam_role.app_instance_role.id]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_instance_profile" "app_instance_profile" {

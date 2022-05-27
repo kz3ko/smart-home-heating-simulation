@@ -22,6 +22,10 @@ resource "aws_launch_configuration" "app_instance" {
   key_name                    = aws_key_pair.app_instance_private_key_pair.key_name
   security_groups             = [aws_security_group.app_instance_active_sg.id]
   user_data                   = file("${path.module}/scripts/app-instance-userdata.sh")
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "app_instance" {
@@ -33,16 +37,7 @@ resource "aws_autoscaling_group" "app_instance" {
   desired_capacity     = 1
   vpc_zone_identifier  = [aws_subnet.main.id]
 
-  tags = [
-    {
-      key                 = "Name"
-      value               = "app-instance"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "SSMAgentAutoUpgradeSSM"
-      value               = "true"
-      propagate_at_launch = true
-    },
-  ]
+  lifecycle {
+    create_before_destroy = true
+  }
 }

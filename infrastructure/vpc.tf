@@ -1,5 +1,7 @@
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 }
 
 resource "aws_subnet" "main" {
@@ -16,6 +18,10 @@ resource "aws_vpc_endpoint" "ssm" {
   security_group_ids = [
     aws_security_group.app_instance_active_sg.id
   ]
+
+  subnet_ids = [
+    aws_subnet.main.id
+  ]
 }
 
 resource "aws_vpc_endpoint" "ssmmessages" {
@@ -27,6 +33,10 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   security_group_ids = [
     aws_security_group.app_instance_active_sg.id
   ]
+
+  subnet_ids = [
+    aws_subnet.main.id
+  ]
 }
 
 resource "aws_vpc_endpoint" "ec2messages" {
@@ -37,6 +47,10 @@ resource "aws_vpc_endpoint" "ec2messages" {
 
   security_group_ids = [
     aws_security_group.app_instance_active_sg.id
+  ]
+
+  subnet_ids = [
+    aws_subnet.main.id
   ]
 }
 

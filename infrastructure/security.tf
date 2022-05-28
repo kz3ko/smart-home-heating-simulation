@@ -7,7 +7,7 @@ resource "aws_key_pair" "app_instance_private_key_pair" {
   public_key = tls_private_key.app_instance_private_key.public_key_openssh
 }
 
-resource "aws_security_group" "app_instance_active_sg" {
+resource "aws_security_group" "default" {
   name_prefix = "app-instance-active-sg-"
   vpc_id      = aws_vpc.main.id
 }
@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "egress_all" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.app_instance_active_sg.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "ingress_all" {
@@ -27,5 +27,5 @@ resource "aws_security_group_rule" "ingress_all" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.app_instance_active_sg.id
+  security_group_id = aws_security_group.default.id
 }

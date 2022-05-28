@@ -27,8 +27,8 @@ resource "aws_launch_template" "app_instance" {
 
   network_interfaces {
     associate_public_ip_address = true
-    security_groups             = [aws_security_group.app_instance_active_sg.id]
-    subnet_id                   = aws_subnet.main.id
+    security_groups             = [aws_security_group.default.id]
+    subnet_id                   = aws_subnet.public.id
   }
 
   monitoring {
@@ -45,7 +45,7 @@ resource "aws_autoscaling_group" "app_instance" {
   min_size            = 1
   desired_capacity    = 1
   max_size            = 1
-  vpc_zone_identifier = [aws_subnet.main.id]
+  vpc_zone_identifier = [aws_subnet.public.id]
 
   launch_template {
     name    = aws_launch_template.app_instance.name

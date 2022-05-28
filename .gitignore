@@ -35,3 +35,6 @@ logs/*
 
 # Terraform related
 .terraform
+
+# Zipped folder
+app.zip

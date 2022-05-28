@@ -14,14 +14,21 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 resource "aws_launch_template" "app_instance" {
-  name_prefix            = "app-instance"
-  image_id               = data.aws_ami.amazon_linux_2.id
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.app_instance_private_key_pair.key_name
-  vpc_security_group_ids = [aws_security_group.app_instance_active_sg.id]
+  name_prefix   = "app-instance"
+  image_id      = data.aws_ami.amazon_linux_2.id
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.app_instance_private_key_pair.key_name
+  user_data     = base64encode(file("${path.module}/scripts/user-data.sh"))
+  depends_on    = [aws_internet_gateway.main]
 
   iam_instance_profile {
     name = aws_iam_instance_profile.app_instance_profile.name
+  }
+
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.app_instance_active_sg.id]
+    subnet_id                   = aws_subnet.main.id
   }
 
   monitoring {

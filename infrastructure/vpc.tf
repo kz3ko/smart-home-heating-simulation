@@ -5,8 +5,13 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.main.id
+  map_public_ip_on_launch = true
+  cidr_block              = "10.0.1.0/24"
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
 }
 
 resource "aws_vpc_endpoint" "ssm" {
@@ -54,4 +59,16 @@ resource "aws_vpc_endpoint" "ec2messages" {
   ]
 }
 
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ec2messages"
+  vpc_endpoint_type   = "Interface"
 
+  security_group_ids = [
+    aws_security_group.app_instance_active_sg.id
+  ]
+
+  subnet_ids = [
+    aws_subnet.main.id
+  ]
+}

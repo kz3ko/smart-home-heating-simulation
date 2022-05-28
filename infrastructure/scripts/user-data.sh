@@ -19,27 +19,24 @@ Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
 
-# Install docker
-sudo yum update
-sudo yum install docker
+until ping -c1 www.google.com &>/dev/null; do
+    echo "Waiting for network connectivity to establish..."
+    sleep 1
+done
 
-USER="ssm-user"
-sudo usermod -aG docker $USER
+# Install docker
+yum update
+yum install docker
+
+usermod -aG docker ssm-user
 
 # Install docker-compose
-sudo wget https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)
-sudo mv docker-compose-$(uname -s)-$(uname -m) /usr/local/bin/docker-compose
-sudo chmod -v +x /usr/local/bin/docker-compose
+sudo rm /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
 # Enable and start docker service
-sudo systemctl enable docker.service
-sudo systemctl start docker.service
+systemctl enable docker.service
+systemctl start docker.service
 
-
-# Install nginx
-sudo amazon-linux-extras enable nginx1
-sudo yum clean metadata
-sudo yum -y install nginx
-
-# Install gunicorn
-pip3 install gunicorn
+--//

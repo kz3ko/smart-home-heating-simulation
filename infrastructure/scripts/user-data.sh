@@ -34,3 +34,12 @@ sudo chmod -v +x /usr/local/bin/docker-compose
 # Enable and start docker service
 sudo systemctl enable docker.service
 sudo systemctl start docker.service
+
+
+# Install nginx
+sudo amazon-linux-extras enable nginx1
+sudo yum clean metadata
+sudo yum -y install nginx
+
+# Install gunicorn
+pip3 install gunicorn

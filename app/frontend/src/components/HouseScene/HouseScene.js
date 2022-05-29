@@ -168,6 +168,12 @@ const HouseScene = () => {
         }).then(() => alert('Logowanie do pliku CSV wyłączone.'));
     }
 
+        function setCurrentDateTime() {
+        axios.post(`/settings`, {
+            setCurrentDateTime: true
+        });
+    }
+
     function setBackyardTemperature() {
         axios.post(`/settings`, {
             backyardTemperature: outsideTemp
@@ -235,6 +241,14 @@ const HouseScene = () => {
                                 style={{ backgroundColor: '#dadada' }}
                             >
                                 LOGGING OFF
+                            </button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <button
+                                onClick={() => setCurrentDateTime()}
+                                style={{ backgroundColor: '#dadada' }}
+                            >
+                                UPDATE CLOCK
                             </button>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>

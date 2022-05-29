@@ -63,6 +63,11 @@ class Datetime:
     def copy(self):
         return deepcopy(self)
 
+    def set_current_datetime(self):
+        self.__dict__ = deepcopy(Datetime().__dict__)
+        self.day, self.month, self.year, self.hour, self.minute = self.__get_current_datetime_splitted()
+        self.factor_to_change = None
+
     def __synchronize_minute(self):
         if self.minute >= 60:
             self.minute -= 60

@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "s3_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:*"]
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         aws_iam_role.app_instance_role.arn
       ]
@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "app_instance_key_policy" {
     effect  = "Allow"
     actions = ["kms:*"]
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         local.root_user,
         aws_iam_role.app_instance_role.arn
@@ -57,12 +57,12 @@ data "aws_iam_policy_document" "app_instance_key_policy" {
 }
 
 resource "aws_iam_role" "app_instance_role" {
-  name               = "app-instance-role"
+  name               = "${var.app_name}-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
 }
 
 resource "aws_iam_role_policy" "app_instance_role_policy" {
-  name   = "app-instance-policy"
+  name   = "${aws_iam_role.app_instance_role.name}-policy"
   role   = aws_iam_role.app_instance_role.id
   policy = data.aws_iam_policy_document.app_instance_role_policy.json
 }
@@ -73,7 +73,7 @@ resource "aws_iam_role_policy_attachment" "app_instance_ssm_policy_attach" {
 }
 
 resource "aws_iam_instance_profile" "app_instance_profile" {
-  name = "app-instance-role"
+  name = "${var.app_name}-role"
   role = aws_iam_role.app_instance_role.id
 }
 

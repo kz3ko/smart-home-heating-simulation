@@ -5,6 +5,6 @@ resource "aws_kms_key" "app_enryption_key" {
 }
 
 resource "aws_kms_alias" "app_encryption_key" {
-  name          = "alias/app-instance-kms-key"
+  name          = "alias/${var.app_name}kms-key"
   target_key_id = aws_kms_key.app_enryption_key.key_id
 }

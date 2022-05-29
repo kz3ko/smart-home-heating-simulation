@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = "app-instance-bucket-eu-west-1"
+  bucket = "${var.app_name}-bucket-eu-west-1"
 }
 
 resource "aws_s3_bucket_acl" "certificates_s3_bucket_acl" {

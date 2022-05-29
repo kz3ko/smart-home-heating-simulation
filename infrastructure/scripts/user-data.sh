@@ -19,24 +19,6 @@ Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
 
-until ping -c1 www.google.com &>/dev/null; do
-    echo "Waiting for network connectivity to establish..."
-    sleep 1
-done
-
-# Install docker
-yum update
-yum install docker
-
-usermod -aG docker ssm-user
-
-# Install docker-compose
-sudo rm /usr/local/bin/docker-compose
-sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-# Enable and start docker service
-systemctl enable docker.service
-systemctl start docker.service
+# Not working :)
 
 --//

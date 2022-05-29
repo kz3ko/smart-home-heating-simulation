@@ -35,7 +35,7 @@ const LoginPage = ({ loginReducer, loginFunction, history }) => {
                 <Button
                     variant={'contained'}
                     sx={{ mt: 3 }}
-                    onClick={() => loginFunction(login, password, () => history.push('/main'), () => console.log('Error'))}
+                    onClick={() => loginFunction(login, password, () => history.push('/home'), () => console.log('Error'))}
                 >
                     Log in
                 </Button>

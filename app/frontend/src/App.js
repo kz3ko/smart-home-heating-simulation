@@ -14,7 +14,7 @@ function App({ loginReducer }) {
               <>
                   {loginReducer.isLogged ? (
                       <>
-                          <Route exact path={'/main'} component={HouseScene}/>
+                          <Route exact path={'/home'} component={HouseScene}/>
                       </>
                   ) : (
                       <>

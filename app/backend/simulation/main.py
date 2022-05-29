@@ -34,6 +34,9 @@ class Simulation(ThreadRunner):
     def set_settings(self, settings: dict[str, any]):
         self.people_move = settings.get('peopleMove', self.people_move)
         self.backyard.currentTemperature = float(settings.get('backyardTemperature', self.backyard.currentTemperature))
+        if settings.get('setCurrentDateTime'):
+            self.datetime.set_current_datetime()
+
         self.logger.enabled = settings.get('csvLoggerEnabled', self.logger.enabled)
 
     def get_rooms(self) -> list:

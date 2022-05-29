@@ -13,7 +13,7 @@ variable app_instance_type {
 variable user_data_path {
   description = "Path to file storing user data for an EC2."
   type        = string
-  default     = "scripts/user-data.sh"
+  default     = "scripts/user_data.sh"
 }
 
 variable asg_min_size {

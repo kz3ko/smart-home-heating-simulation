@@ -1,13 +1,13 @@
-resource "tls_private_key" "app_instance_private_key" {
+resource "tls_private_key" "ec2_private_key" {
   algorithm = "RSA"
 }
 
-resource "aws_key_pair" "app_instance_private_key_pair" {
+resource "aws_key_pair" "ec2_private_key_pair" {
   key_name   = "${var.app_name}-private-key-pair"
-  public_key = tls_private_key.app_instance_private_key.public_key_openssh
+  public_key = tls_private_key.ec2_private_key.public_key_openssh
 }
 
-resource "aws_security_group" "default" {
+resource "aws_security_group" "main" {
   name_prefix = "${var.app_name}-sg-"
   vpc_id      = aws_vpc.main.id
 }
@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "egress_https" {
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
+  security_group_id = aws_security_group.main.id
 }
 
 resource "aws_security_group_rule" "ingress_https" {
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "ingress_https" {
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
+  security_group_id = aws_security_group.main.id
 }
 
 resource "aws_security_group_rule" "egress_http" {
@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "egress_http" {
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
+  security_group_id = aws_security_group.main.id
 }
 
 resource "aws_security_group_rule" "ingress_http" {
@@ -45,5 +45,5 @@ resource "aws_security_group_rule" "ingress_http" {
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
+  security_group_id = aws_security_group.main.id
 }

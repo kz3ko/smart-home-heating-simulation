@@ -5,7 +5,10 @@ env:
 
 name: Smart home simulation CI/CD
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feature/infrastructure
 
 jobs:
   Lint_terraform:
